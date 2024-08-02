@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect} from 'react';
+import React, {Component, isValidElement, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -6,57 +6,36 @@ import {
   Text,
   StatusBar,
   Dimensions,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MyInput} from '../../components/myTextInput';
 import {MyButton} from '../../components/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
-import {TextInput} from 'react-native-gesture-handler';
+import {useRoute} from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
+const NameInput = ({route, navigation}) => {
+  const {phoneNumber} = route.params;
+  const [name, setName] = useState('');
+  const [isValidName, setValidName] = useState(true);
 
-const PhoneNumber = ({navigation}) => {
-  const user = [
-    {
-      phone: '0356681747',
-      name: 'Võ Tài Thu',
-      pass: '123456',
-    },
-    {
-      phone: '0389912147',
-      name: 'Lên Văn Đức',
-      pass: '123456',
-    },
-    {
-      phone: '0334567890',
-      name: 'Nguyễn Thị Thảo',
-      pass: '123456',
-    },
-  ];
+  const verifyName = name => {
+    // Cắt khoảng trống ở đầu và cuối chuỗi
 
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isValidPhone, setValidPhone] = useState(true);
-
-  const verifyPhoneNumber = phone => {
-    if (!phone) return true;
-    let regex = RegExp(
-      /(^(0|84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$)/,
-    );
-
-    return regex.test(phone);
+    if (name == '' || name.length > 1) {
+      return true;
+    }
+    return false;
   };
 
   const isButtonDisabled = () => {
-    if (!isValidPhone || phoneNumber.length == 0) {
+    if (!isValidName || name.length == 0) {
       return true; // Button sẽ bị vô hiệu hóa
     } else {
       return false; // Button sẽ không bị vô hiệu hóa
     }
-  };
-
-  // Check phone number
-  const checkPhoneNumber = phone => {
-    return user.some(user => user.phone == phone);
   };
 
   return (
@@ -68,14 +47,40 @@ const PhoneNumber = ({navigation}) => {
           paddingTop: StatusBar.currentHeight,
           alignItems: 'center',
         }}>
+        {/* Trở mà màn hình trước */}
+        {/* Trở mà màn hình trước */}
+
+        <TouchableOpacity
+          style={{
+            width: 40,
+            height: 40,
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            marginTop: StatusBar.currentHeight + 10,
+            zIndex: 1,
+            left: 10,
+          }}
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Image
+            source={require('../../assets/images/arrow-small-left.png')}
+            style={{width: 40, height: 40}}
+          />
+        </TouchableOpacity>
+
+        {/* ---------------------------------------------------------------------------- */}
         <View
           style={{
             height: windowHeight * 0.65,
             width: '100%',
             alignItems: 'center',
           }}>
+          {/* --------------------------------Ảnh chính------------------------------- */}
+
           <Image
-            source={require('../../assets/images/busImg.png')}
+            source={require('../../assets/images/your-name.png')}
             style={{
               resizeMode: 'stretch',
               width: '60%',
@@ -96,7 +101,7 @@ const PhoneNumber = ({navigation}) => {
                   fontFamily: 'PottaOne-Regular',
                   paddingBottom: 20,
                 }}>
-                Nhà xe Phi Vũ kính chào quý khách
+                Tên bạn là gì ?
               </Text>
             </View>
 
@@ -104,23 +109,26 @@ const PhoneNumber = ({navigation}) => {
             {/* Input Số điện thoại */}
 
             <MyInput
-              imageLeftSoure={require('../../assets/images/phone-call.png')}
-              placeholderText={'Nhập số điện thoại...'}
-              keyboardType={'numeric'}
+              imageLeftSoure={require('../../assets/images/user.png')}
+              placeholderText={'Nhập tên của bạn...'}
               onchangeText={text => {
-                setPhoneNumber(text);
-                setValidPhone(verifyPhoneNumber(text));
+                setName(text.replace(/^\s+/, ''));
+                setValidName(verifyName(text));
               }}
-              value={phoneNumber}
+              value={name}
               imageRightSoure={require('../../assets/images/circle-xmark.png')}
               onPress={() => {
-                setPhoneNumber('');
-                setValidPhone(true);
+                setName('');
+                setValidName(true);
               }}
             />
-            <View style={{width: '100%', height: 30}}>
-              <Text style={{color: 'red', height: 30}}>
-                {isValidPhone ? '' : 'Số điện thoại không hợp lệ !'}
+            <View style={{height: 30, width: '100%'}}>
+              <Text
+                style={{
+                  color: 'red',
+                  height: 30,
+                }}>
+                {isValidName ? '' : 'Tên không hợp lệ !'}
               </Text>
             </View>
           </View>
@@ -139,12 +147,7 @@ const PhoneNumber = ({navigation}) => {
               nameBtn={'Tiếp tục'}
               isDisabled={isButtonDisabled()}
               onPress={() => {
-                if (checkPhoneNumber(phoneNumber)) {
-                  navigation.navigate('PasswordInput');
-                } else {
-                  navigation.navigate('NameInput');
-                }
-                setPhoneNumber('');
+                navigation.navigate('NewPassword', {phoneNumber, name});
               }}
             />
           </View>
@@ -153,4 +156,4 @@ const PhoneNumber = ({navigation}) => {
     </SafeAreaView>
   );
 };
-export default PhoneNumber;
+export default NameInput;

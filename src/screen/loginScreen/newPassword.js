@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,14 +9,18 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import {useRoute} from '@react-navigation/native';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MyInput} from '../../components/myTextInput';
 import {MyButton} from '../../components/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
+import {registerUser} from '../../redux/actions/userAction';
+import {useDispatch, useSelector} from 'react-redux';
 
 const windowHeight = Dimensions.get('window').height;
 
-const NewPassword = ({navigation}) => {
+const NewPassword = ({route, navigation}) => {
+  const {phoneNumber, name} = route.params;
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -24,6 +28,11 @@ const NewPassword = ({navigation}) => {
   const [showcfPass, setShowCfPass] = useState(false);
 
   const [isvaluePass, setValuePass] = useState(true);
+  const [isvaluecfPass, setValuecfPass] = useState(true);
+
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+  const registrationError = useSelector(state => state.registrationError);
 
   // kiểm tra tính hợp lệ của mật khảu
   const verifyPassword = password => {
@@ -50,7 +59,28 @@ const NewPassword = ({navigation}) => {
     }
   };
 
-  //so sánh password
+  //gọi database
+  const handleRegister = async () => {
+    const userData = {
+      phoneNumber: phoneNumber,
+      name: name,
+      password: password,
+      roles: 'user',
+      email: '',
+      birthDate: '',
+      sex: '',
+      image: '',
+    };
+    const err = await dispatch(registerUser(userData));
+    if (!registrationError) {
+      navigation.replace('HomeUser');
+    }
+  };
+
+  useEffect(() => {
+    setValuecfPass(true);
+    console.log(new Date());
+  }, [password, confirmPassword]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -100,7 +130,7 @@ const NewPassword = ({navigation}) => {
               marginTop: 10,
             }}
           />
-          <View style={{alignItems: 'center', width: '80%', marginTop: 50}}>
+          <View style={{alignItems: 'center', width: '80%', marginTop: 20}}>
             <Text
               style={{
                 fontSize: 25,
@@ -109,7 +139,7 @@ const NewPassword = ({navigation}) => {
                 fontFamily: 'PottaOne-Regular',
                 paddingBottom: 10,
               }}>
-              Xin chào
+              Tạo mật khẩu mới
             </Text>
 
             {/* Input Password */}
@@ -133,8 +163,8 @@ const NewPassword = ({navigation}) => {
               }}
               isSecureTextEntry={!showPassword}
             />
-            <View style={{width: '100%', height: 30}}>
-              <Text style={{color: 'red', height: 30}}>
+            <View style={{width: '100%', height: 20}}>
+              <Text style={{color: 'red', height: 20}}>
                 {isvaluePass ? '' : 'Phải từ 6 kí tự !'}
               </Text>
             </View>
@@ -159,6 +189,11 @@ const NewPassword = ({navigation}) => {
               }}
               isSecureTextEntry={!showcfPass}
             />
+            <View style={{width: '100%', height: 20}}>
+              <Text style={{color: 'red', height: 20}}>
+                {isvaluecfPass ? '' : 'Mật khẩu không trùng khớp !'}
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -174,11 +209,9 @@ const NewPassword = ({navigation}) => {
               isDisabled={isButtonDisabled()}
               onPress={() => {
                 if (password === confirmPassword) {
-                  console.log('Password OK:', password);
-                }
-                else{
-                  console.log('Password không khớpF');
-
+                  handleRegister();
+                } else {
+                  setValuecfPass(false);
                 }
               }}
             />

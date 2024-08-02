@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,17 +13,34 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {MyInput} from '../../components/myTextInput';
 import {MyButton} from '../../components/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
+import {useSelector} from 'react-redux';
 
 const windowHeight = Dimensions.get('window').height;
 
 const PasswordInput = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isValid, setIsValid] = useState(true);
 
+  const {user} = useSelector(state => state.user);
+
+  const checkPassword = () => {
+    console.log(password, user.password);
+    if (password === user.password) {
+      setIsValid(true);
+      return true;
+    }
+    setIsValid(false);
+    return false;
+  };
   //   hide and show the password
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    setIsValid(true);
+  }, [password]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -58,7 +75,7 @@ const PasswordInput = ({navigation}) => {
                 fontFamily: 'PottaOne-Regular',
                 paddingBottom: 10,
               }}>
-              Xin chào
+              Xin chào {user.name}
             </Text>
 
             {/* Input Password */}
@@ -82,6 +99,12 @@ const PasswordInput = ({navigation}) => {
               isSecureTextEntry={!showPassword}
             />
 
+            <View style={{height: 20, width: '100%'}}>
+              <Text style={{color: 'red'}}>
+                {' '}
+                {!isValid ? 'Mật khẩu không đúng !!' : ''}
+              </Text>
+            </View>
             {/* Quên mật khẩu */}
             {/* Quên mật khẩu */}
 
@@ -120,7 +143,15 @@ const PasswordInput = ({navigation}) => {
             <MyButton
               nameBtn={'Đăng nhập'}
               onPress={() => {
-                console.log('Press');
+                console.log(user);
+
+                if (checkPassword()) {
+                  if (user.roles === 'admin') {
+                    navigation.replace('AdminNav');
+                  } else {
+                    navigation.replace('HomeUser');
+                  }
+                }
               }}
             />
           </View>

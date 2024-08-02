@@ -34,7 +34,8 @@ const App: () => Node = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-// DDDDDDd
+  // DDDDDDd
+ 
   return <RootComponent />;
 };
 

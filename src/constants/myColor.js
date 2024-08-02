@@ -1,5 +1,6 @@
 export const myColor = {
-  buttonColor: '#FF6600',
+  buttonColor: '#FFA500',
   textBtnColor: '#FFFFFF',
-  iconcolor: '#FF6600',
+  iconcolor: '#FFA500',
+  headerColor: '#FFA500',
 };

@@ -62,7 +62,13 @@ const CustomerDetails = ({navigation, route}) => {
     ],
     [],
   );
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const parent = navigation.getParent();
+    parent?.setOptions({tabBarStyle: {display: 'none'}});
+    return () => {
+      parent?.setOptions({tabBarStyle: undefined});
+    };
+  }, [navigation]);
 
   //-----------------------------gửi dữ liệu cập nhật thông tin-------------------------
   const updatedUser = async () => {

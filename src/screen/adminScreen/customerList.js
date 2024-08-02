@@ -82,7 +82,7 @@ const Customer = ({navigation}) => {
             flex: 1,
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
-            marginTop: -40,
+            marginTop: -60,
             zIndex: 1,
             backgroundColor: '#FAFAFA',
           }}>

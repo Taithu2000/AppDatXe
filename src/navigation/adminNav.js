@@ -16,7 +16,6 @@ const LoginNav = () => {
       screenOptions={{headerShown: false, tabBarHideOnKeyboard: true}}>
       <Tab.Screen name="HomeAdmin" component={HomeAdmin} />
       <Tab.Screen name="BusList" component={BusList} />
-
       <Tab.Screen name="CustomerNav" component={CustomerNav} />
     </Tab.Navigator>
   );
@@ -33,3 +32,14 @@ export const CustomerNav = () => {
     </Stack.Navigator>
   );
 };
+
+// export const BusNav = () => {
+//   return (
+//     <Stack.Navigator
+//       initialRouteName="BusDetails"
+//       screenOptions={{headerShown: false}}>
+//       <Stack.Screen name="BusList" component={BusList} />
+//       <Stack.Screen name="BusDetails" component={BusDetails} />
+//     </Stack.Navigator>
+//   );
+// };

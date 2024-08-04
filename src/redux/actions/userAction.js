@@ -17,9 +17,8 @@ export const fetchUserData = phoneNumber => async dispatch => {
     dispatch({type: GET_USER_DATA, payload: response.data});
     return null; // No error
   } catch (error) {
-    console.log('Lỗi khi gửi yêu cầu API: ', error);
     Alert.alert('Error', 'Lỗi khi gửi yêu cầu API. Vui lòng thử lại sau.');
-    return error; // Return error
+    throw new Error('Không thể gọi data', error);
   }
 };
 
@@ -30,10 +29,9 @@ export const registerUser = userData => async dispatch => {
 
     return null;
   } catch (error) {
-    console.log('Lỗi khi đăng ký: ', error);
     Alert.alert('Error', 'Lỗi khi đăng ký. Vui lòng thử lại sau.');
     dispatch({type: USER_REGISTER_FAIL, payload: error.message});
-    return error; // Return error
+    throw new Error('Không thể gọi data', error);
   }
 };
 
@@ -47,8 +45,7 @@ export const fetchUsersDataSSS = () => async dispatch => {
 
     return null; // No error
   } catch (error) {
-    console.log('Lỗi khi gửi yêu cầu API: ', error);
     Alert.alert('Error', 'Lỗi khi gửi yêu cầu API. Vui lòng thử lại sau.');
-    return error; // Return error
+    throw new Error('Không thể gọi data', error);
   }
 };

@@ -22,6 +22,8 @@ import {useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 import {DeletetDialog} from '../../components/mydialog';
+import {formatDate, formatDateFromISOString} from '../../constants/formatDate';
+
 // import {IP} from '@env';
 
 const IP = 'http://10.0.2.2:3306';
@@ -32,8 +34,6 @@ const CustomerDetails = ({navigation, route}) => {
   const date = useRef(new Date()).current;
 
   const [open, setOpen] = useState(false);
-
-  const [ivalidDate, setIvalidDate] = useState(false);
 
   const [name, setName] = useState(user.name);
   const [email, setEmai] = useState(user.email);
@@ -100,21 +100,6 @@ const CustomerDetails = ({navigation, route}) => {
       console.log('Lỗi xóa user: ', e);
       ToastAndroid.show('Không thể xóa !', ToastAndroid.SHORT);
     }
-  };
-
-  const formatDateFromISOString = isoString => {
-    const date = new Date(isoString); // Chuyển đổi chuỗi ISO thành đối tượng Date
-    const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và đảm bảo có 2 chữ số
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0, cần cộng thêm 1
-    const year = date.getFullYear(); // Lấy năm
-
-    return `${day}/${month}/${year}`; // Trả về định dạng dd/mm/yyyy
-  };
-  const formatDate = dateObject => {
-    const day = String(dateObject.getDate()).padStart(2, '0');
-    const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Tháng được tính từ 0 nên cần cộng thêm 1
-    const year = dateObject.getFullYear();
-    return `${day}/${month}/${year}`;
   };
 
   //  kiểm tra tính hợp lệ email------------------kiểm tra tính hợp lệ email-------------kiểm tra tính hợp lệ email------------------
@@ -355,11 +340,12 @@ const CustomerDetails = ({navigation, route}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Text style={{fontSize: 18, color: '#000000', paddingLeft: 15}}>
-                {ivalidDate
-                  ? formatDate(date)
-                  : formatDateFromISOString(user.birthDate)}
-              </Text>
+              <TextInput
+                style={{fontSize: 18, color: '#000000', paddingLeft: 15}}
+                value={formatDateFromISOString(birthDate)}
+                placeholder="DD/MM/YYYY"
+                editable={false}
+              />
 
               <TouchableOpacity
                 style={{
@@ -385,11 +371,9 @@ const CustomerDetails = ({navigation, route}) => {
               onConfirm={date => {
                 setOpen(false);
                 setBirthDate(date);
-                setIvalidDate(true);
               }}
               onCancel={() => {
                 setOpen(false);
-                setIvalidDate(false);
               }}
             />
           </View>
@@ -400,6 +384,8 @@ const CustomerDetails = ({navigation, route}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
+            {/* Cập nhật tài khoản--------------------------Cập nhật tài khoản---------------------------- */}
+
             <View style={{width: '60%'}}>
               <MyButton
                 nameBtn={'Cập nhật'}

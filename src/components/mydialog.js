@@ -26,8 +26,8 @@ export const DeletetDialog = ({
           {title}
         </Dialog.Title>
         <Dialog.Description>{description}</Dialog.Description>
-        <Dialog.Button label="Cancel" onPress={onCancel} />
-        <Dialog.Button label="Delete" onPress={onDelete} />
+        <Dialog.Button label="Hủy bỏ" onPress={onCancel} />
+        <Dialog.Button label="Vẫn xóa" onPress={onDelete} />
       </Dialog.Container>
     </View>
   );

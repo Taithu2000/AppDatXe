@@ -23,7 +23,7 @@ const Customer = ({navigation}) => {
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchUsers, setSearchUser] = useState('');
 
-  const handleUser = async user => {
+  const handleUser = async () => {
     console.log('chay api');
     await dispatch(fetchUsersDataSSS());
     // setIsValidData(true);

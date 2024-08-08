@@ -17,10 +17,10 @@ import DatePicker from 'react-native-date-picker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {myColor} from '../../constants/myColor';
 import {MyButton} from '../../components/myButton';
-import {formatDate} from '../../constants/formatDate';
-import {addBusAPI} from '../../api/busesAPI';
-
+import {formatDate, convertDateFormat} from '../../constants/formatDate';
+import {addBusAction} from '../../redux/actions/busAction';
 const {height, width} = Dimensions.get('window');
+import {useDispatch, useSelector} from 'react-redux';
 
 const AddBus = ({validModal, setValidModal}) => {
   const dataType = [
@@ -37,6 +37,8 @@ const AddBus = ({validModal, setValidModal}) => {
     {label: 'King Long ', value: 'King Long'},
     {label: 'Mercedes Benz', value: 'Mercedes Benz'},
   ];
+
+  const dispatch = useDispatch();
 
   const date = useRef(new Date()).current;
   const [open, setOpen] = useState(false);
@@ -98,14 +100,14 @@ const AddBus = ({validModal, setValidModal}) => {
     const data = {
       license_plate,
       type,
-      registration_date,
+      registration_date: convertDateFormat(registration_date),
       brand,
       color,
       num_Seats,
       image: '',
     };
 
-    const response = await addBusAPI(data);
+    const response = await dispatch(addBusAction(data));
     if (response) {
       ToastAndroid.show('Thêm thành công !', ToastAndroid.SHORT);
     } else {
@@ -238,11 +240,11 @@ const AddBus = ({validModal, setValidModal}) => {
               <Dropdown
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
+                itemTextStyle={{color: '#000000'}}
                 selectedTextStyle={[
                   styles.selectedTextStyle,
                   {color: '#000000'},
                 ]}
-                inputSearchStyle={[styles.inputSearchStyle, {color: '#000000'}]}
                 iconStyle={styles.iconStyle}
                 data={dataType}
                 maxHeight={200}
@@ -269,6 +271,7 @@ const AddBus = ({validModal, setValidModal}) => {
               <Dropdown
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
+                itemTextStyle={{color: '#000000'}}
                 selectedTextStyle={[
                   styles.selectedTextStyle,
                   {color: '#000000'},

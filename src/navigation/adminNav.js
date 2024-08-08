@@ -5,23 +5,39 @@ import CustomerList from '../screen/adminScreen/customerList';
 import CustomerDetails from '../screen/adminScreen/customerDetails';
 import BusList from '../screen/adminScreen/busList';
 import BusDetails from '../screen/adminScreen/busDetails';
+import RouteList from '../screen/adminScreen/routeList';
+import AddRoute from '../screen/adminScreen/routeAdd';
+import TestScreen from '../screen/adminScreen/test';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const LoginNav = () => {
+const AdminNav = () => {
   return (
     <Tab.Navigator
-      initialRouteName="BusDetails"
+      initialRouteName="BusNav"
       screenOptions={{headerShown: false, tabBarHideOnKeyboard: true}}>
       <Tab.Screen name="HomeAdmin" component={HomeAdmin} />
       <Tab.Screen name="BusNav" component={BusNav} />
+      <Tab.Screen name="RouteNav" component={RouteNav} />
       <Tab.Screen name="CustomerNav" component={CustomerNav} />
+      <Tab.Screen name="TestScreen" component={TestScreen} />
     </Tab.Navigator>
   );
 };
-export default LoginNav;
+export default AdminNav;
+
+export const RouteNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="AddRoute"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="RouteList" component={RouteList} />
+      <Stack.Screen name="AddRoute" component={AddRoute} />
+    </Stack.Navigator>
+  );
+};
 
 export const CustomerNav = () => {
   return (

@@ -17,3 +17,13 @@ export const formatDateFromISOString = isoString => {
 
   return `${day}/${month}/${year}`; // Trả về định dạng dd/mm/yyyy
 };
+
+// Hàm chuyển đổi định dạng ngày tháng từ DD/MM/YYYY sang YYYY-MM-DD để lưu lên database
+export const convertDateFormat = dateString => {
+  const [day, month, year] = dateString.split('/');
+  const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(
+    2,
+    '0',
+  )}`;
+  return formattedDate;
+};

@@ -18,32 +18,33 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {getAllbusAPI} from '../../api/busesAPI';
 import {formatDate, formatDateFromISOString} from '../../constants/formatDate';
 import AddBus from './busAdd';
-import {selectBus} from '../../redux/actions/busAction';
-import {useDispatch} from 'react-redux';
+import {selectBus, getAllbusData} from '../../redux/actions/busAction';
+import {useDispatch, useSelector} from 'react-redux';
 
 //------------------------------------Danh sách Xe----------------------------------------------
 
 const BusList = ({navigation}) => {
-  const [buses, setBuses] = useState([]);
-
+  // const [buses, setBuses] = useState([]);
   const [validModal, setValidModal] = useState(false);
-
+  const {buses} = useSelector(state => state.bus);
   const dispatch = useDispatch();
 
   const getBuses = async () => {
-    const data = await getAllbusAPI();
-
-    setBuses(data);
+    await dispatch(getAllbusData());
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (validModal === false) {
-        getBuses();
-        console.log('goi api');
-      }
-    }, [validModal]),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (validModal === false) {
+  //       getBuses();
+  //       console.log('goi api');
+  //     }
+  //   }, [validModal]),
+  // );
+
+  useEffect(() => {
+    getBuses();
+  }, []);
 
   const Item = ({item, onPress}) => (
     <TouchableOpacity style={style.containerItem} onPress={onPress}>

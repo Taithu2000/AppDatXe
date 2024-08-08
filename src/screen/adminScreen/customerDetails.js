@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
   KeyboardAvoidingView,
-  ToastAndroid,
+  ToastAndroid,Button 
 } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import {MyStatusBar} from '../../components/myStatusBar';
@@ -22,7 +22,11 @@ import {useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 import {DeletetDialog} from '../../components/mydialog';
-import {formatDate, formatDateFromISOString} from '../../constants/formatDate';
+import {
+  formatDate,
+  formatDateFromISOString,
+  convertDateFormat,
+} from '../../constants/formatDate';
 
 // import {IP} from '@env';
 
@@ -77,7 +81,7 @@ const CustomerDetails = ({navigation, route}) => {
       password,
       email,
       sex,
-      birthDate,
+      birthDate: convertDateFormat(birthDate),
     };
 
     try {

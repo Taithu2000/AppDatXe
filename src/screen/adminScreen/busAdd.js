@@ -100,7 +100,7 @@ const AddBus = ({validModal, setValidModal}) => {
     const data = {
       license_plate,
       type,
-      registration_date: convertDateFormat(registration_date),
+      registration_date,
       brand,
       color,
       num_Seats,
@@ -195,7 +195,7 @@ const AddBus = ({validModal, setValidModal}) => {
                   }}
                   editable={false}
                   placeholder="DD/MM/YYYY"
-                  value={registration_date}
+                  value={registration_date ? formatDate(registration_date) : ''}
                 />
 
                 <TouchableOpacity
@@ -225,7 +225,7 @@ const AddBus = ({validModal, setValidModal}) => {
               date={date}
               onConfirm={date => {
                 setOpen(false);
-                setRegistration_date(formatDate(date));
+                setRegistration_date(date);
                 setValidDate(true);
               }}
               onCancel={() => {

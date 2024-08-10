@@ -1,4 +1,4 @@
-import {GET_ROUTES_DATA} from '../actions/routeAction';
+import {GET_ROUTES_DATA, ADD_ROUTE_DATA} from '../actions/routeAction';
 
 const initialState = {
   routes: [],
@@ -17,11 +17,17 @@ const initialState = {
 
 const routeReducer = (state = initialState, action) => {
   switch (action.type) {
-   
     case GET_ROUTES_DATA:
       return {
         ...state,
         routes: action.payload,
+      };
+
+    case ADD_ROUTE_DATA:
+      return {
+        ...state,
+        routes: [...state.routes, action.payload],
+        route: action.payload,
       };
 
     default:

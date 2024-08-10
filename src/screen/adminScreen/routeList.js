@@ -17,6 +17,7 @@ import {Sreach} from '../../components/search';
 import {getAllrouteData} from '../../redux/actions/routeAction';
 import {getAllbusData} from '../../redux/actions/busAction';
 import {useDispatch, useSelector} from 'react-redux';
+import dayjs from 'dayjs';
 
 const RouteList = ({navigation}) => {
   const [searchUsers, setSearchUser] = useState('');
@@ -49,30 +50,40 @@ const RouteList = ({navigation}) => {
           {getLicensePlateByBusId(item.bus_id, buses)}
         </Text>
         <View style={styles.viewText}>
-          <Text style={styles.textPlate}>Dak Lak</Text>
-          <Text style={{fontSize: 16, color: '#000000'}}>
-            -------đến------{'>'}
-          </Text>
-          <Text style={styles.textPlate}>Hồ Chí Minh</Text>
+          <View style={styles.viewLocation}>
+            <Text style={styles.textLocation}> {item.start_point}</Text>
+            <View></View>
+          </View>
+          <Text style={{fontSize: 16, color: '#000000'}}>---đến---{'>'}</Text>
+          <View style={styles.viewLocation}>
+            <View></View>
+            <Text style={styles.textLocation}>{item.end_point}</Text>
+          </View>
         </View>
 
         <View style={styles.viewText}>
-          <Text style={[styles.textPlate, {color: '#0099FF'}]}>08:00</Text>
+          <Text style={[styles.textPlate, {color: '#0099FF'}]}>
+            {item.departure_time}
+          </Text>
 
           <Text style={{fontSize: 16, color: '#000000'}}>
             {' '}
-            -------10h30------{'>'}
+            ---{item.total_time}---{'>'}
           </Text>
           <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
         </View>
 
         <View style={styles.viewText}>
           <View>
-            <Text style={styles.textDate}>Bắt đầu: 20/10/2024</Text>
-            <Text style={styles.textDate}>Kết thúc: 20/10/2024</Text>
+            <Text style={styles.textDate}>
+              Bắt đầu: {dayjs(item.start_date).format('DD/MM/YYYY')}
+            </Text>
+            <Text style={styles.textDate}>
+              Kết thúc: {dayjs(item.end_date).format('DD/MM/YYYY')}
+            </Text>
           </View>
 
-          <Text style={styles.textPlate}>1 ngày / lần</Text>
+          <Text style={styles.textPlate}>{item.date_interval} ngày / lần</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -96,7 +107,11 @@ const RouteList = ({navigation}) => {
               justifyContent: 'center',
             }}>
             <Text style={styles.textHeader}>Tuyến đường</Text>
-            <TouchableOpacity style={styles.btnAdd}>
+            <TouchableOpacity
+              style={styles.btnAdd}
+              onPress={() => {
+                navigation.navigate('AddRoute');
+              }}>
               <Image
                 source={require('../../assets/images/addroute.jpg')}
                 style={{width: 40, height: 40, borderRadius: 50}}
@@ -124,6 +139,9 @@ const RouteList = ({navigation}) => {
             renderItem={({item}) => <Item item={item} />}
             keyExtractor={item => item._id}
           />
+          {console.log('ssss111111111111---------')}
+          {console.log(routes[routes.length - 1])}
+          {console.log('ssss----------------')}
         </View>
       </View>
     </SafeAreaView>
@@ -151,9 +169,11 @@ const styles = StyleSheet.create({
   viewTouch: {
     width: '90%',
     marginTop: 10,
-    height: 200,
+    height: 250,
     borderWidth: 1,
     borderRadius: 20,
+    borderColor: '#C0C0C0',
+    backgroundColor: '#FFFFEE',
   },
   textPlate: {
     alignSelf: 'center',
@@ -161,6 +181,24 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 22,
     padding: 5,
+  },
+
+  viewLocation: {
+    fontWeight: '700',
+    color: '#000000',
+    fontSize: 22,
+    height: 80,
+    width: '40%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 5,
+  },
+
+  textLocation: {
+    fontWeight: '700',
+    color: '#000000',
+    fontSize: 22,
   },
 
   textDate: {

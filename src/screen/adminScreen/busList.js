@@ -142,7 +142,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 20,
   },
 
   textHeader: {
@@ -203,6 +203,7 @@ const style = StyleSheet.create({
     margin: 10,
     alignItems: 'center',
     borderColor: '#C0C0C0',
+    backgroundColor: '#FFFFEE',
   },
   itemImage: {
     width: '80%',

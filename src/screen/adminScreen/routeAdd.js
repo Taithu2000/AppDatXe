@@ -23,34 +23,31 @@ import {Dropdown} from 'react-native-element-dropdown';
 import {myColor} from '../../constants/myColor';
 import {MyButton} from '../../components/myButton';
 import {fontFamilies} from '../../constants/fontFamilies';
-import {addBusAction} from '../../redux/actions/busAction';
-const {height, width} = Dimensions.get('window');
 import {useDispatch, useSelector} from 'react-redux';
+import {addRouteData} from '../../redux/actions/routeAction';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
 import dayjs from 'dayjs';
 
-const AddRoute = ({validModal, setValidModal}) => {
+const AddRoute = ({navigation}) => {
+  const dispatch = useDispatch();
+
   const {buses} = useSelector(state => state.bus);
   const [dataProvince, setDataProvince] = useState([]);
 
-  const [value, setValue] = useState();
-  const [isFocus, setIsFocus] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [yesterday, setYesterday] = useState(date.setDate(date.getDate() - 1));
 
   const [bus_id, setBus_id] = useState(null);
   const [isFocusPlate, setIsFocusPlate] = useState(false);
 
-  const [date, setDate] = useState(new Date());
-
-  const [yesterday, setYesterday] = useState(date.setDate(date.getDate() - 1));
-
+  const [start_date, setStart_date] = useState(null);
   const [isModalstart_date, setIsModalstart_date] = useState(false);
   const [select_start_date, setSelect_start_date] = useState(new Date());
-  const [start_date, setStart_date] = useState(null);
 
+  const [end_date, setEnd_date] = useState(null);
   const [isModalend_date, setIsModalend_date] = useState(false);
   const [select_end_date, setSelect_end_date] = useState(new Date());
-  const [end_date, setEnd_date] = useState(null);
 
   const [start_point, setStart_point] = useState(null);
   const [isFocusStartP, setIsFocusStartP] = useState(false);
@@ -58,17 +55,76 @@ const AddRoute = ({validModal, setValidModal}) => {
   const [end_point, setEnd_point] = useState(null);
   const [isFocusEndP, setIsFocusEndP] = useState(false);
 
-  const [isDeparture_time, setIsDeparture_time] = useState(false);
-  const [departure_time, setDeparture_time] = useState(null);
-  const [select_departure_time, setSelect_departure_time] = useState(
-    new Date(),
-  );
+  const [dateDeparture_time, setDateDeparture_time] = useState(new Date());
 
+  const [departure_time, setDeparture_time] = useState(null);
+  const [isDeparture_time, setIsDeparture_time] = useState(false);
+
+  const [total_time, setTotal_time] = useState(null);
   const [dataTotal_time, setDataTotal_time] = useState(['']);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isTotal_time, setIsTotal_time] = useState(false);
-  const [total_time, setTotal_time] = useState(null);
-  const [select_Total_time, setSelect_Total_time] = useState(new Date());
+
+  const [date_interval, setDate_interval] = useState(null);
+  const [validFormatInterval, setValidFormatInterval] = useState(true);
+
+  const [total_seats, setTotal_seats] = useState(null);
+
+  const [validBus_id, setValidBus_id] = useState(true);
+  const [validStart_date, setValidStart_date] = useState(true);
+  const [validEnd_date, setValidEnd_date] = useState(true);
+  const [validStart_point, setValidStart_point] = useState(true);
+  const [validEnd_point, setValidEnd_point] = useState(true);
+  const [validDeparture_time, setValidDeparture_time] = useState(true);
+  const [validTotal_time, setValidTotal_time] = useState(true);
+  const [validInterval, setValidInterval] = useState(true);
+
+  //kiểm tra hợp lệ của số ngày đi/ lượt
+
+  const verifyInterval = date_interval => {
+    if (!date_interval) return true;
+    let regex = new RegExp(/^[1-9][0-9]{0,2}$/);
+    return regex.test(date_interval);
+  };
+
+  // kiểm tra thông tin khi nhấn thêm
+  const verifyAll = () => {
+    let flag = true;
+    if (!bus_id) {
+      setValidBus_id(false);
+      flag = false;
+    }
+    if (!start_date) {
+      setValidStart_date(false);
+      flag = false;
+    }
+    if (!end_date) {
+      setValidEnd_date(false);
+      flag = false;
+    }
+    if (!start_point) {
+      setValidStart_point(false);
+      flag = false;
+    }
+    if (!end_point) {
+      setValidEnd_point(false);
+      flag = false;
+    }
+    if (!departure_time) {
+      setValidDeparture_time(false);
+      flag = false;
+    }
+    if (!total_time) {
+      setValidTotal_time(false);
+      flag = false;
+    }
+
+    if (!date_interval) {
+      setValidInterval(false);
+      flag = false;
+    }
+    return flag;
+  };
 
   useEffect(() => {
     const times = [];
@@ -88,6 +144,30 @@ const AddRoute = ({validModal, setValidModal}) => {
   useEffect(() => {
     getDataProvince();
   }, []);
+
+  // --------------------------------gọi api để thêm tuyến đường--------------------------------
+
+  const addRoute = async () => {
+    const data = {
+      bus_id,
+      start_date,
+      end_date,
+      start_point,
+      end_point,
+      departure_time,
+      total_time,
+      date_interval,
+      total_seats,
+    };
+
+    const response = await dispatch(addRouteData(data));
+
+    if (response) {
+      ToastAndroid.show('Thêm thành công !', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Không thể thêm, thử lại sau !', ToastAndroid.SHORT);
+    }
+  };
 
   // --------------------------------tạo label cho dropdown----------------------------------------
 
@@ -147,7 +227,7 @@ const AddRoute = ({validModal, setValidModal}) => {
   };
 
   const renderLabeldDeparture_time = () => {
-    if (depa) {
+    if (departure_time) {
       return (
         <Text style={[styles.label, isFocusEndP && {color: 'blue'}]}>
           Giờ xuất phát
@@ -201,7 +281,7 @@ const AddRoute = ({validModal, setValidModal}) => {
             fontSize: 20,
             fontFamily: fontFamilies.Medium,
           }}>
-          Thông tin xe
+          Thêm tuyến đường
         </Text>
       </View>
 
@@ -229,12 +309,16 @@ const AddRoute = ({validModal, setValidModal}) => {
                 onBlur={() => setIsFocusPlate(false)}
                 onChange={item => {
                   setBus_id(item._id);
+                  setTotal_seats(item.num_Seats);
                   setIsFocusPlate(false);
+                  setValidBus_id(true);
                 }}
               />
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn xe!</Text>
+              <Text style={{color: 'red'}}>
+                {validBus_id ? '' : 'Chưa chọn xe!'}
+              </Text>
             </View>
             {/*------------------------------------------- Thêm ngày bắt đầu------------------------------------------ */}
 
@@ -262,7 +346,9 @@ const AddRoute = ({validModal, setValidModal}) => {
               </View>
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày bắt đầu</Text>
+              <Text style={{color: 'red'}}>
+                {validStart_date ? '' : 'Chưa chọn ngày!'}
+              </Text>
             </View>
 
             <Modal visible={isModalstart_date} transparent={true}>
@@ -296,6 +382,7 @@ const AddRoute = ({validModal, setValidModal}) => {
                       onPress={() => {
                         setIsModalstart_date(false);
                         setStart_date(select_start_date);
+                        setValidStart_date(true);
                       }}>
                       <Text style={{color: '#FFFFFF', fontSize: 18}}>Chọn</Text>
                     </TouchableOpacity>
@@ -313,7 +400,7 @@ const AddRoute = ({validModal, setValidModal}) => {
                   placeholder="Ngày kết thúc"
                   style={styles.textInput}
                   editable={false}
-                  value={end_date ? dayjs(end_date).format('MM/DD/YYYY') : ''}
+                  value={end_date ? dayjs(end_date).format('DD/MM/YYYY') : ''}
                 />
                 <TouchableOpacity
                   style={styles.btn}
@@ -328,7 +415,10 @@ const AddRoute = ({validModal, setValidModal}) => {
               </View>
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày kết thúc</Text>
+              <Text style={{color: 'red'}}>
+                {' '}
+                {validEnd_date ? '' : 'Chưa chọn ngày!'}
+              </Text>
             </View>
             <Modal visible={isModalend_date} transparent={true}>
               <View style={styles.modalCaledar}>
@@ -342,7 +432,7 @@ const AddRoute = ({validModal, setValidModal}) => {
                     headerButtonColor={'#FFFFFF'}
                     weekDaysTextStyle={{color: '#000000', fontSize: 16}}
                     selectedItemColor={myColor.headerColor}
-                    minDate={yesterday}
+                    minDate={select_start_date}
                     date={select_end_date}
                     onChange={params => setSelect_end_date(params.date)}
                   />
@@ -362,6 +452,7 @@ const AddRoute = ({validModal, setValidModal}) => {
                       onPress={() => {
                         setIsModalend_date(false);
                         setEnd_date(select_end_date);
+                        setValidEnd_date(true);
                       }}>
                       <Text style={{color: '#FFFFFF', fontSize: 18}}>Chọn</Text>
                     </TouchableOpacity>
@@ -396,11 +487,14 @@ const AddRoute = ({validModal, setValidModal}) => {
                 onChange={item => {
                   setStart_point(item.name);
                   setIsFocusStartP(false);
+                  setValidStart_point(true);
                 }}
               />
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày bắt đầu</Text>
+              <Text style={{color: 'red'}}>
+                {validStart_point ? '' : 'Chưa chọn địa điểm!'}
+              </Text>
             </View>
             {/*------------------------------------------- Thêm nơi kết thúc----------------------------------------- */}
 
@@ -425,24 +519,26 @@ const AddRoute = ({validModal, setValidModal}) => {
                 onChange={item => {
                   setEnd_point(item.name);
                   setIsFocusEndP(false);
+                  setValidEnd_point(true);
                 }}
               />
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày bắt đầu</Text>
+              <Text style={{color: 'red'}}>
+                {' '}
+                {validEnd_point ? '' : 'Chưa chọn địa điểm!'}
+              </Text>
             </View>
             {/*------------------------------------------- Giờ xuất phát ------------------------------------------ */}
 
             <View style={styles.viewText}>
-              {renderLabeldTotal_tiem()}
+              {renderLabeldDeparture_time()}
               <View style={styles.viewInput}>
                 <TextInput
                   placeholder="Giờ xuất phát"
                   style={styles.textInput}
                   editable={false}
-                  value={
-                    departure_time ? dayjs(departure_time).format('HH:mm') : ''
-                  }
+                  value={departure_time ? departure_time : ''}
                 />
                 <TouchableOpacity
                   style={styles.btn}
@@ -455,7 +551,9 @@ const AddRoute = ({validModal, setValidModal}) => {
               </View>
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày bắt đầu</Text>
+              <Text style={{color: 'red'}}>
+                {validDeparture_time ? '' : 'Chưa chọn giờ đi!'}
+              </Text>
             </View>
 
             <DatePicker
@@ -463,10 +561,11 @@ const AddRoute = ({validModal, setValidModal}) => {
               is24hourSource="locale"
               mode="time"
               open={isDeparture_time}
-              date={date}
+              date={dateDeparture_time}
               onConfirm={date => {
                 setIsDeparture_time(false);
-                setDeparture_time(date);
+                setDeparture_time(dayjs(dateDeparture_time).format('HH:mm'));
+                setValidDeparture_time(true);
               }}
               onCancel={() => {
                 setIsDeparture_time(false);
@@ -476,10 +575,12 @@ const AddRoute = ({validModal, setValidModal}) => {
             {/*------------------------------------------- Thời gian di chuyển ------------------------------------------ */}
 
             <View style={styles.viewText}>
+              {renderLabeldTotal_tiem()}
               <View style={styles.viewInput}>
                 <TextInput
                   placeholder="Thời gian di chuyển"
                   style={styles.textInput}
+                  value={total_time}
                 />
                 <TouchableOpacity
                   style={styles.btn}
@@ -494,7 +595,10 @@ const AddRoute = ({validModal, setValidModal}) => {
               </View>
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày bắt đầu</Text>
+              <Text style={{color: 'red'}}>
+                {' '}
+                {validTotal_time ? '' : 'Chưa chọn thời gian!'}
+              </Text>
             </View>
 
             <Modal visible={isTotal_time} transparent={true}>
@@ -557,7 +661,11 @@ const AddRoute = ({validModal, setValidModal}) => {
                       flexDirection: 'row',
                       justifyContent: 'space-around',
                     }}>
-                    <TouchableOpacity style={styles.btnCalendar}>
+                    <TouchableOpacity
+                      style={styles.btnCalendar}
+                      onPress={() => {
+                        setIsTotal_time(false);
+                      }}>
                       <Text
                         style={{
                           alignSelf: 'center',
@@ -567,7 +675,13 @@ const AddRoute = ({validModal, setValidModal}) => {
                         Hủy
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnCalendar}>
+                    <TouchableOpacity
+                      style={styles.btnCalendar}
+                      onPress={() => {
+                        setTotal_time(dataTotal_time[selectedIndex]);
+                        setValidTotal_time(true);
+                        setIsTotal_time(false);
+                      }}>
                       <Text
                         style={{
                           alignSelf: 'center',
@@ -590,6 +704,12 @@ const AddRoute = ({validModal, setValidModal}) => {
                   placeholder="......"
                   keyboardType="numeric"
                   style={[styles.textInput, {width: '50%'}]}
+                  onChangeText={text => {
+                    setValidFormatInterval(verifyInterval(text));
+                    setValidInterval(true);
+                    setDate_interval(text);
+                  }}
+                  value={date_interval}
                 />
                 <View
                   style={{
@@ -601,7 +721,10 @@ const AddRoute = ({validModal, setValidModal}) => {
               </View>
             </View>
             <View style={{height: 20, width: '90%'}}>
-              <Text style={{color: 'red'}}>Chưa chọn ngày bắt đầu</Text>
+              <Text style={{color: 'red'}}>
+                {validInterval ? '' : 'Chưa chọn số ngày!'}
+                {validFormatInterval ? '' : 'nhập sai định dạng'}
+              </Text>
             </View>
 
             {/*------------------------------- Button thêm tuyến đường------------------------------- */}
@@ -617,14 +740,16 @@ const AddRoute = ({validModal, setValidModal}) => {
                 nameBtn={'Thêm tuyến'}
                 onPress={async () => {
                   if (verifyAll()) {
-                    await addBus();
-                    setLicense_plate('');
-                    setNumSeats('');
-                    setBrand(null);
-                    setType(null);
-                    setColor('');
-                    setRegistration_date(null);
-                    setValidModal(false);
+                    await addRoute();
+                    setBus_id(null);
+                    setStart_date(null);
+                    setEnd_date(null);
+                    setStart_point(null);
+                    setEnd_point(null);
+                    setDeparture_time(null);
+                    setTotal_time(null);
+                    setDate_interval(null);
+                    navigation.goBack();
                   }
                 }}
               />

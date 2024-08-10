@@ -31,7 +31,7 @@ export default AdminNav;
 export const RouteNav = () => {
   return (
     <Stack.Navigator
-      initialRouteName="AddRoute"
+      initialRouteName="RouteList"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="RouteList" component={RouteList} />
       <Stack.Screen name="AddRoute" component={AddRoute} />

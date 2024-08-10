@@ -7,8 +7,8 @@ export const ADD_BUS = 'ADD_BUS';
 import axios from 'axios';
 
 // import {IP} from '@env';
-// const IP = 'http://192.168.1.5:3306';
-const IP = 'http://10.0.2.2:3306';
+const IP = 'http://192.168.1.5:3306';
+// const IP = 'http://10.0.2.2:3306';
 
 //Lấy thông tin của tất cả xe
 

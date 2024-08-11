@@ -50,6 +50,7 @@ const BusReducer = (state = initialState, action) => {
       return {
         ...state,
         buses: updatedBuses,
+        bus: action.payload,
       };
 
     case DELETE_BUS:

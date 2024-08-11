@@ -24,7 +24,6 @@ const Customer = ({navigation}) => {
   const [searchUsers, setSearchUser] = useState('');
 
   const handleUser = async () => {
-    console.log('chay api');
     await dispatch(fetchUsersDataSSS());
     // setIsValidData(true);
   };
@@ -111,7 +110,13 @@ export default Customer;
 // ----------------------------------------------------------------ITEM  FLASLIT----------------------------------------------------------------
 
 export const Item = ({item, onPress}) => (
-  <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+  <View
+    style={{
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#FFFFEE',
+    }}>
     <TouchableOpacity onPress={onPress} style={{width: '90%', marginTop: 10}}>
       <ScrollView style={{width: '100%'}}>
         <View

@@ -16,15 +16,25 @@ import {myColor} from '../../constants/myColor';
 import {Sreach} from '../../components/search';
 import {getAllrouteData} from '../../redux/actions/routeAction';
 import {getAllbusData} from '../../redux/actions/busAction';
+import {selectRoute} from '../../redux/actions/routeAction';
 import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
 
 const RouteList = ({navigation}) => {
+  const ACTIVE = 'ACTIVE';
+  const STOPPED = 'STOPPED';
+  const [page, setPage] = useState(ACTIVE);
   const [searchUsers, setSearchUser] = useState('');
+
+  const [date, setDate] = useState(
+    new Date(dayjs(new Date()).format('YYYY-MM-DD')),
+  );
 
   const {buses} = useSelector(state => state.bus);
   const {routes} = useSelector(state => state.route);
   const dispatch = useDispatch();
+
+  const [newRoutes, setNewRoutes] = useState(routes);
 
   const getData = async () => {
     await dispatch(getAllrouteData());
@@ -34,6 +44,26 @@ const RouteList = ({navigation}) => {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    const filterRoutes = () => {
+      const data = routes.filter(route => {
+        if (page === ACTIVE) {
+          return (
+            new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() >=
+            date.getTime()
+          );
+        } else {
+          return (
+            new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() <
+            date.getTime()
+          );
+        }
+      });
+      setNewRoutes(data);
+    };
+    filterRoutes();
+  }, [routes, page]);
 
   // ----------------------------------------------------------------ITEM  FLASLIT----------------------------------------------------------------
 
@@ -50,40 +80,54 @@ const RouteList = ({navigation}) => {
           {getLicensePlateByBusId(item.bus_id, buses)}
         </Text>
         <View style={styles.viewText}>
-          <View style={styles.viewLocation}>
-            <Text style={styles.textLocation}> {item.start_point}</Text>
-            <View></View>
+          <View style={styles.bodyLocation}>
+            <View style={styles.viewIconLocation}>
+              <Image
+                source={require('../../assets/images/dot-circle.png')}
+                style={styles.iconLocation}
+              />
+              <View
+                style={{
+                  height: '40%',
+                  width: 3,
+                  backgroundColor: myColor.headerColor,
+                }}></View>
+
+              <Image
+                source={require('../../assets/images/marker.png')}
+                style={styles.iconLocation}
+              />
+            </View>
+            <View style={styles.viewLocation}>
+              <Text style={styles.textLocation}>{item.start_point}</Text>
+              <Text style={styles.textLocation}>{item.end_point}</Text>
+            </View>
           </View>
-          <Text style={{fontSize: 16, color: '#000000'}}>---đến---{'>'}</Text>
-          <View style={styles.viewLocation}>
-            <View></View>
-            <Text style={styles.textLocation}>{item.end_point}</Text>
+
+          <View style={styles.viewTime}>
+            <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
+
+            <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
           </View>
         </View>
 
-        <View style={styles.viewText}>
-          <Text style={[styles.textPlate, {color: '#0099FF'}]}>
-            {item.departure_time}
-          </Text>
+        <View style={styles.line}></View>
+        <View style={styles.footer}>
+          <Image
+            style={styles.iconLocation}
+            source={require('../../assets/images/time-quarter-to.png')}
+          />
+          <Text style={styles.textfooter}> ~ {item.total_time} h</Text>
 
-          <Text style={{fontSize: 16, color: '#000000'}}>
+          <View style={{width: 30}}></View>
+          <Image
+            style={styles.iconLocation}
+            source={require('../../assets/images/arrows-repeat.png')}
+          />
+          <Text style={styles.textfooter}>
             {' '}
-            ---{item.total_time}---{'>'}
+            {item.date_interval} ngày / lần
           </Text>
-          <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
-        </View>
-
-        <View style={styles.viewText}>
-          <View>
-            <Text style={styles.textDate}>
-              Bắt đầu: {dayjs(item.start_date).format('DD/MM/YYYY')}
-            </Text>
-            <Text style={styles.textDate}>
-              Kết thúc: {dayjs(item.end_date).format('DD/MM/YYYY')}
-            </Text>
-          </View>
-
-          <Text style={styles.textPlate}>{item.date_interval} ngày / lần</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -130,18 +174,58 @@ const RouteList = ({navigation}) => {
             zIndex: 1,
             backgroundColor: '#FAFAFA',
           }}>
+          <View style={styles.page}>
+            <TouchableOpacity
+              style={[
+                styles.btnPage,
+                {backgroundColor: page === ACTIVE ? '#FFFFFF' : '#e8bb7b'},
+              ]}
+              onPress={() => {
+                setPage(ACTIVE);
+              }}>
+              <Text
+                style={[
+                  styles.textbtnPage,
+                  {color: page === ACTIVE ? myColor.iconcolor : '#000000'},
+                ]}>
+                Hoạt động
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.btnPage,
+                {backgroundColor: page === STOPPED ? '#FFFFFF' : '#e8bb7b'},
+              ]}
+              onPress={() => {
+                setPage(STOPPED);
+              }}>
+              <Text
+                style={[
+                  styles.textbtnPage,
+                  {color: page === STOPPED ? myColor.iconcolor : '#000000'},
+                ]}>
+                Đã ngừng
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           {/* Tìm từ khóa */}
           <Sreach onChangeText={setSearchUser} value={searchUsers} />
 
           {/* danh sách */}
           <FlatList
-            data={routes}
-            renderItem={({item}) => <Item item={item} />}
+            data={newRoutes}
+            renderItem={({item}) => (
+              <Item
+                item={item}
+                onPress={() => {
+                  dispatch(selectRoute(item));
+                  navigation.navigate('RouteDetails');
+                }}
+              />
+            )}
             keyExtractor={item => item._id}
           />
-          {console.log('ssss111111111111---------')}
-          {console.log(routes[routes.length - 1])}
-          {console.log('ssss----------------')}
         </View>
       </View>
     </SafeAreaView>
@@ -169,12 +253,39 @@ const styles = StyleSheet.create({
   viewTouch: {
     width: '90%',
     marginTop: 10,
-    height: 250,
+    height: 220,
     borderWidth: 1,
     borderRadius: 20,
     borderColor: '#C0C0C0',
     backgroundColor: '#FFFFEE',
   },
+
+  page: {
+    marginTop: 5,
+    width: '90%',
+    height: 40,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#e8bb7b',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+
+  btnPage: {
+    height: 35,
+    width: '40%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+  },
+
+  textbtnPage: {
+    color: '#000000',
+    fontSize: 18,
+  },
+
   textPlate: {
     alignSelf: 'center',
     fontWeight: '700',
@@ -183,15 +294,40 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-  viewLocation: {
-    fontWeight: '700',
-    color: '#000000',
-    fontSize: 22,
-    height: 80,
-    width: '40%',
+  viewText: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+
+  bodyLocation: {
+    width: '75%',
     flexDirection: 'row',
+    height: 100,
+  },
+
+  viewIconLocation: {
+    height: '100%',
+    width: '15%',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    padding: 5,
+    alignItems: 'center',
+  },
+
+  iconLocation: {
+    width: 20,
+    height: 20,
+    tintColor: myColor.headerColor,
+  },
+
+  viewLocation: {
+    height: '100%',
+    width: '85%',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
     padding: 5,
   },
 
@@ -199,6 +335,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000000',
     fontSize: 22,
+  },
+
+  viewTime: {
+    width: '25%',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    height: 100,
   },
 
   textDate: {
@@ -209,11 +352,22 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-  viewText: {
+  line: {
+    width: '90%',
+    height: 2,
+    backgroundColor: '#CCCCCC',
+    alignSelf: 'center',
+    margin: 20,
+  },
+
+  footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
+  },
+
+  textfooter: {
+    fontSize: 18,
+    color: '#555555',
   },
 });

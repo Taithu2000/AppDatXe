@@ -86,7 +86,6 @@ const CustomerDetails = ({navigation, route}) => {
 
     try {
       await axios.put(`${IP}/users/update/${phoneNumber}`, data);
-      console.log(IP);
       ToastAndroid.show('Cập nhật thông tin thành công !', ToastAndroid.SHORT);
     } catch (e) {
       console.log('Lỗi cập nhật thông tin: ', e);

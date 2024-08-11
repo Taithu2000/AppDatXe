@@ -1,4 +1,10 @@
-import {GET_ROUTES_DATA, ADD_ROUTE_DATA} from '../actions/routeAction';
+import {
+  GET_ROUTES_DATA,
+  ADD_ROUTE_DATA,
+  SELECT_ROUTE,
+  UPDATE_ROUTE,
+  DELETE_ROUTE,
+} from '../actions/routeAction';
 
 const initialState = {
   routes: [],
@@ -28,6 +34,32 @@ const routeReducer = (state = initialState, action) => {
         ...state,
         routes: [...state.routes, action.payload],
         route: action.payload,
+      };
+
+    case SELECT_ROUTE:
+      return {
+        ...state,
+        route: action.payload,
+      };
+
+    case UPDATE_ROUTE:
+      const updateRoute = state.routes.map(route => {
+        if (route._id === action.payload._id) {
+          return action.payload;
+        } else {
+          return route;
+        }
+      });
+
+    case DELETE_ROUTE:
+      const deleteRoute = state.routes.filter(route => {
+        return route._id !== action.payload;
+      });
+
+      return {
+        ...state,
+        routes: deleteRoute,
+        route: initialState.route,
       };
 
     default:

@@ -106,7 +106,7 @@ const CustomerDetails = ({navigation}) => {
         <View style={styles.busContainer}>
           <View style={styles.rowView}>
             <View style={{width: '60%'}}>
-              <Text style={styles.textPlate}>{`${bus.license_plate}`}</Text>
+              <Text style={styles.textPlate}>{bus.license_plate}</Text>
             </View>
             <Image
               source={require('../../assets/images/Bus.png')}
@@ -120,28 +120,28 @@ const CustomerDetails = ({navigation}) => {
             </Text>
 
             <Text style={styles.text}>
-              {`${formatDateFromISOString(bus.registration_date)}`}
+              {formatDateFromISOString(bus.registration_date)}
             </Text>
           </View>
           <View style={styles.rowView}>
             <Text style={[styles.text, {color: '#555555'}]}>Loại xe</Text>
 
-            <Text style={styles.text}>{`${bus.type}`}</Text>
+            <Text style={styles.text}>{bus.type}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={[styles.text, {color: '#555555'}]}>Hãng xe</Text>
 
-            <Text style={styles.text}>{`${bus.brand}`}</Text>
+            <Text style={styles.text}>{bus.brand}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={[styles.text, {color: '#555555'}]}>Màu xe</Text>
 
-            <Text style={styles.text}>{`${bus.color}`}</Text>
+            <Text style={styles.text}>{bus.color}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={[styles.text, {color: '#555555'}]}>Số ghế</Text>
 
-            <Text style={styles.text}>{`${bus.num_Seats}`}</Text>
+            <Text style={styles.text}>{bus.num_Seats}</Text>
           </View>
 
           {/* ------------------------------------Button Xoa-------------------------------------------------------------- */}

@@ -7,6 +7,8 @@ import BusList from '../screen/adminScreen/busList';
 import BusDetails from '../screen/adminScreen/busDetails';
 import RouteList from '../screen/adminScreen/routeList';
 import AddRoute from '../screen/adminScreen/routeAdd';
+import RouteDetails from '../screen/adminScreen/routeDetails';
+
 import TestScreen from '../screen/adminScreen/test';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -35,6 +37,7 @@ export const RouteNav = () => {
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="RouteList" component={RouteList} />
       <Stack.Screen name="AddRoute" component={AddRoute} />
+      <Stack.Screen name="RouteDetails" component={RouteDetails} />
     </Stack.Navigator>
   );
 };

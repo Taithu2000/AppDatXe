@@ -226,6 +226,7 @@ const AddBus = ({validModal, setValidModal}) => {
               onConfirm={date => {
                 setOpen(false);
                 setRegistration_date(date);
+
                 setValidDate(true);
               }}
               onCancel={() => {

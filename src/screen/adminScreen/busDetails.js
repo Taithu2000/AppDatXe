@@ -1,33 +1,29 @@
-import React, {Component, useEffect, useState, useMemo, useRef} from 'react';
+import React, {Component, useEffect, useState, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
   Image,
   Text,
   StatusBar,
-  TextInput,
   TouchableOpacity,
   ScrollView,
-  FlatList,
-  KeyboardAvoidingView,
   ToastAndroid,
   StyleSheet,
 } from 'react-native';
-import RadioGroup from 'react-native-radio-buttons-group';
+import {useFocusEffect} from '@react-navigation/native';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
-import DatePicker from 'react-native-date-picker';
 import {MyButton} from '../../components/myButton';
 import {ButtonDel} from '../../components/buttonDel';
-import {useRoute} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import axios from 'axios';
 import {DeletetDialog} from '../../components/mydialog';
 import {useSelector, useDispatch} from 'react-redux';
 import {formatDateFromISOString} from '../../constants/formatDate';
 import BusUpdate from './busUpdate';
 import {deleteBus} from '../../redux/actions/busAction';
+import ItemRoute from '../../components/itemRoute';
+import {selectRoute} from '../../redux/actions/routeAction';
+import dayjs from 'dayjs';
 
 // import {IP} from '@env';
 
@@ -35,18 +31,11 @@ const IP = 'http://10.0.2.2:3306';
 
 const CustomerDetails = ({navigation}) => {
   const {bus} = useSelector(state => state.bus);
+  const {routes} = useSelector(state => state.route);
+
   const dispatch = useDispatch();
 
-  const date = useRef(new Date()).current;
-
-  const [open, setOpen] = useState(false);
-
-  const [ivalidDate, setIvalidDate] = useState(false);
-
-  // const [isUpdated, setIsUpdated] = useState(false);
-
-  const [isName, setIsName] = useState(true);
-  const [isEmail, setIsEmail] = useState(true);
+  const [isvalidData, setIsvalidData] = useState(false);
 
   const [isVisibleDel, setIsVisibleDel] = useState(false);
 
@@ -60,6 +49,28 @@ const CustomerDetails = ({navigation}) => {
       ToastAndroid.show('Không thể xóa, thử lại sau !', ToastAndroid.SHORT);
     }
   };
+
+  // ---------------------------------------------ẩn bottom tab---------------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({tabBarStyle: {display: 'none'}});
+    }, [navigation]),
+  );
+  //--------------------------------------------- kiểm tra có tuyến đường hay không---------------------------------------------
+  useEffect(() => {
+    const checkData = routes.some(route => {
+      const end_date = new Date(
+        dayjs(route.end_date).format('YYYY-MM-DD'),
+      ).getTime();
+      const date_now = new Date(
+        dayjs(new Date()).format('YYYY-MM-DD'),
+      ).getTime();
+
+      return route.bus_id == bus._id && end_date >= date_now;
+    });
+    setIsvalidData(checkData);
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -183,6 +194,63 @@ const CustomerDetails = ({navigation}) => {
             </View>
           </View>
         </View>
+
+        <View style={styles.boundary}>
+          <Text
+            style={{
+              fontFamily: fontFamilies.Bold,
+              fontSize: 20,
+              color: '#000',
+            }}>
+            Tuyến đường hoạt động
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AddRoute', {bus});
+            }}>
+            <Text style={{fontSize: 20, color: myColor.headerColor}}>
+              Thêm tuyến
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{marginBottom: 20}}>
+          {routes.map((route, index) => {
+            const end_date = new Date(
+              dayjs(route.end_date).format('YYYY-MM-DD'),
+            ).getTime();
+            const date_now = new Date(
+              dayjs(new Date()).format('YYYY-MM-DD'),
+            ).getTime();
+
+            if (route.bus_id == bus._id && end_date >= date_now) {
+              return (
+                <ItemRoute
+                  key={index}
+                  item={route}
+                  onPress={() => {
+                    dispatch(selectRoute(route));
+                    navigation.navigate('RouteDetails');
+                  }}
+                />
+              );
+            }
+          })}
+
+          {isvalidData ? (
+            <Text></Text>
+          ) : (
+            <View style={{height: 120}}>
+              <Image
+                source={require('../../assets/images/train-journey.png')}
+                style={styles.imageData}
+              />
+
+              <Text style={{fontSize: 16, alignSelf: 'center'}}>
+                Chưa có tuyến đường nào !
+              </Text>
+            </View>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -192,7 +260,6 @@ export default CustomerDetails;
 
 const styles = StyleSheet.create({
   busContainer: {
-    borderWidth: 1,
     flex: 1,
     alignItems: 'center',
   },
@@ -222,5 +289,24 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: '#000000',
+  },
+
+  boundary: {
+    marginTop: 50,
+    marginBottom: 40,
+    width: '90%',
+    height: 50,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  imageData: {
+    width: 60,
+    height: 60,
+    margin: 10,
+    alignSelf: 'center',
+    tintColor: '#2fd6c3',
   },
 });

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,10 @@ import {
   Alert,
   SafeAreaView,
   StatusBar,
-  KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker';
-import DateTimePicker from 'react-native-ui-datepicker';
 import WheelPicker from 'react-native-wheely';
 import {Dropdown} from 'react-native-element-dropdown';
 import {myColor} from '../../constants/myColor';
@@ -28,16 +27,13 @@ import {addRouteData} from '../../redux/actions/routeAction';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
 import dayjs from 'dayjs';
+import MyCaledarFull from '../../components/myCaledarFull';
 
-const AddRoute = ({navigation}) => {
+const AddRoute = ({navigation, route: myRoute}) => {
   const dispatch = useDispatch();
-
-  const {route} = useSelector(state => state.route);
 
   const {buses} = useSelector(state => state.bus);
   const [dataProvince, setDataProvince] = useState([]);
-
-  const [date, setDate] = useState(new Date());
 
   const [yesterday, setYesterday] = useState(
     new Date().setDate(new Date().getDate() - 1),
@@ -83,6 +79,13 @@ const AddRoute = ({navigation}) => {
   const [validDeparture_time, setValidDeparture_time] = useState(true);
   const [validTotal_time, setValidTotal_time] = useState(true);
   const [validInterval, setValidInterval] = useState(true);
+
+  useEffect(() => {
+    if (myRoute.params) {
+      const {bus} = myRoute.params;
+      setBus_id(bus._id);
+    }
+  }, []);
 
   useEffect(() => {
     if (start_date) {
@@ -147,15 +150,16 @@ const AddRoute = ({navigation}) => {
   }, []);
 
   //----------------------------------Tắt bottom tabs--------------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({tabBarStyle: {display: 'none'}});
 
-  useEffect(() => {
-    const parent = navigation.getParent();
-    parent?.setOptions({tabBarStyle: {display: 'none'}});
-    return () => {
-      parent?.setOptions({tabBarStyle: undefined});
-    };
-  }, [navigation]);
-
+      return () => {
+        parent?.setOptions({tabBarStyle: {display: 'none'}});
+      };
+    }, [navigation]),
+  );
   // --------------------------------gọi data tỉnh thành----------------------------------------
 
   const getDataProvince = async () => {
@@ -372,49 +376,23 @@ const AddRoute = ({navigation}) => {
               </Text>
             </View>
 
-            <Modal visible={isModalstart_date} transparent={true}>
-              <View style={styles.modalCaledar}>
-                <View style={styles.viewCaledar}>
-                  <DateTimePicker
-                    mode="single"
-                    locale={'vi'}
-                    headerContainerStyle={{
-                      backgroundColor: myColor.headerColor,
-                    }}
-                    headerTextStyle={{color: '#FFFFFF', fontSize: 18}}
-                    headerButtonColor={'#FFFFFF'}
-                    weekDaysTextStyle={{color: '#000000', fontSize: 16}}
-                    selectedItemColor={myColor.headerColor}
-                    minDate={yesterday}
-                    maxDate={end_date ? end_date : new Date('2100-12-31')}
-                    date={select_start_date}
-                    onChange={params => {
-                      setSelect_start_date(params.date);
-                    }}
-                  />
-
-                  <View
-                    style={{
-                      marginBottom: 10,
-                      marginTop: -20,
-                      width: '95%',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View></View>
-                    <TouchableOpacity
-                      style={styles.btnCalendar}
-                      onPress={() => {
-                        setIsModalstart_date(false);
-                        setStart_date(select_start_date);
-                        setValidStart_date(true);
-                      }}>
-                      <Text style={{color: '#FFFFFF', fontSize: 18}}>Chọn</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal>
+            <MyCaledarFull
+              visible={isModalstart_date}
+              mindate={yesterday}
+              maxDate={end_date ? end_date : new Date('2100-12-31')}
+              date={select_start_date}
+              onChange={params => {
+                setSelect_start_date(params.date);
+              }}
+              onPressbtnLater={() => {
+                setIsModalstart_date(false);
+              }}
+              onPressbtnSelect={() => {
+                setIsModalstart_date(false);
+                setStart_date(select_start_date);
+                setValidStart_date(true);
+              }}
+            />
 
             {/*------------------------------------------- Thêm ngày kết thúc------------------------------------------ */}
 
@@ -445,50 +423,25 @@ const AddRoute = ({navigation}) => {
                 {validEnd_date ? '' : 'Chưa chọn ngày!'}
               </Text>
             </View>
-            <Modal visible={isModalend_date} transparent={true}>
-              <View style={styles.modalCaledar}>
-                <View style={styles.viewCaledar}>
-                  <DateTimePicker
-                    mode="single"
-                    headerContainerStyle={{
-                      backgroundColor: myColor.headerColor,
-                    }}
-                    headerTextStyle={{color: '#FFFFFF', fontSize: 18}}
-                    headerButtonColor={'#FFFFFF'}
-                    weekDaysTextStyle={{color: '#000000', fontSize: 16}}
-                    selectedItemColor={myColor.headerColor}
-                    minDate={start_date ? start_date : yesterday}
-                    date={select_end_date}
-                    onChange={params => {
-                      setSelect_end_date(params.date);
-                    }}
-                  />
 
-                  <View
-                    style={{
-                      marginBottom: 10,
-                      marginTop: -20,
-                      width: '95%',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View></View>
+            <MyCaledarFull
+              visible={isModalend_date}
+              mindate={start_date ? start_date : yesterday}
+              date={select_end_date}
+              onChange={params => {
+                setSelect_end_date(params.date);
+              }}
+              onPressbtnLater={() => {
+                setIsModalend_date(false);
+              }}
+              onPressbtnSelect={() => {
+                setIsModalend_date(false);
 
-                    <TouchableOpacity
-                      style={styles.btnCalendar}
-                      onPress={() => {
-                        setIsModalend_date(false);
+                setEnd_date(select_end_date);
 
-                        setEnd_date(select_end_date);
-
-                        setValidEnd_date(true);
-                      }}>
-                      <Text style={{color: '#FFFFFF', fontSize: 18}}>Chọn</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal>
+                setValidEnd_date(true);
+              }}
+            />
 
             {/*------------------------------------------- Thêm nơi bắt đầu----------------------------------------- */}
 

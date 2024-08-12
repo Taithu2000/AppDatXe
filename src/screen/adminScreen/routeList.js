@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {Component, useEffect, useState, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
@@ -11,6 +11,7 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
 import {Sreach} from '../../components/search';
@@ -19,6 +20,7 @@ import {getAllbusData} from '../../redux/actions/busAction';
 import {selectRoute} from '../../redux/actions/routeAction';
 import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
+import ItemRoute from '../../components/itemRoute';
 
 const RouteList = ({navigation}) => {
   const ACTIVE = 'ACTIVE';
@@ -36,6 +38,16 @@ const RouteList = ({navigation}) => {
 
   const [newRoutes, setNewRoutes] = useState(routes);
 
+  //---------------------------------------------hiển thị bottom tab---------------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({tabBarStyle: {display: undefined}});
+    }, [navigation]),
+  );
+
+  //---------------------------------------------gọi data--------------------------------------------
+
   const getData = async () => {
     await dispatch(getAllrouteData());
     await dispatch(getAllbusData());
@@ -44,6 +56,8 @@ const RouteList = ({navigation}) => {
   useEffect(() => {
     getData();
   }, []);
+
+  //---------------------------------------------lọc dữ liệu --------------------------------------------
 
   useEffect(() => {
     const filterRoutes = () => {
@@ -66,72 +80,6 @@ const RouteList = ({navigation}) => {
   }, [routes, page]);
 
   // ----------------------------------------------------------------ITEM  FLASLIT----------------------------------------------------------------
-
-  // lấy biển số thông qua id
-  const getLicensePlateByBusId = (busId, buses) => {
-    const bus = buses.find(bus => bus._id == busId);
-    return bus ? bus.license_plate : '';
-  };
-
-  const Item = ({item, onPress}) => (
-    <View style={styles.containerItem}>
-      <TouchableOpacity onPress={onPress} style={styles.viewTouch}>
-        <Text style={styles.textPlate}>
-          {getLicensePlateByBusId(item.bus_id, buses)}
-        </Text>
-        <View style={styles.viewText}>
-          <View style={styles.bodyLocation}>
-            <View style={styles.viewIconLocation}>
-              <Image
-                source={require('../../assets/images/dot-circle.png')}
-                style={styles.iconLocation}
-              />
-              <View
-                style={{
-                  height: '40%',
-                  width: 3,
-                  backgroundColor: myColor.headerColor,
-                }}></View>
-
-              <Image
-                source={require('../../assets/images/marker.png')}
-                style={styles.iconLocation}
-              />
-            </View>
-            <View style={styles.viewLocation}>
-              <Text style={styles.textLocation}>{item.start_point}</Text>
-              <Text style={styles.textLocation}>{item.end_point}</Text>
-            </View>
-          </View>
-
-          <View style={styles.viewTime}>
-            <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
-
-            <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
-          </View>
-        </View>
-
-        <View style={styles.line}></View>
-        <View style={styles.footer}>
-          <Image
-            style={styles.iconLocation}
-            source={require('../../assets/images/time-quarter-to.png')}
-          />
-          <Text style={styles.textfooter}> ~ {item.total_time} h</Text>
-
-          <View style={{width: 30}}></View>
-          <Image
-            style={styles.iconLocation}
-            source={require('../../assets/images/arrows-repeat.png')}
-          />
-          <Text style={styles.textfooter}>
-            {' '}
-            {item.date_interval} ngày / lần
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -172,7 +120,7 @@ const RouteList = ({navigation}) => {
             borderTopRightRadius: 30,
             marginTop: -60,
             zIndex: 1,
-            backgroundColor: '#FAFAFA',
+            backgroundColor: myColor.containerColor,
           }}>
           <View style={styles.page}>
             <TouchableOpacity
@@ -216,7 +164,7 @@ const RouteList = ({navigation}) => {
           <FlatList
             data={newRoutes}
             renderItem={({item}) => (
-              <Item
+              <ItemRoute
                 item={item}
                 onPress={() => {
                   dispatch(selectRoute(item));
@@ -245,21 +193,6 @@ const styles = StyleSheet.create({
 
   btnAdd: {width: 50, height: 50, position: 'absolute', right: 20},
 
-  containerItem: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewTouch: {
-    width: '90%',
-    marginTop: 10,
-    height: 220,
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#C0C0C0',
-    backgroundColor: '#FFFFEE',
-  },
-
   page: {
     marginTop: 5,
     width: '90%',
@@ -284,90 +217,5 @@ const styles = StyleSheet.create({
   textbtnPage: {
     color: '#000000',
     fontSize: 18,
-  },
-
-  textPlate: {
-    alignSelf: 'center',
-    fontWeight: '700',
-    color: '#000000',
-    fontSize: 22,
-    padding: 5,
-  },
-
-  viewText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-
-  bodyLocation: {
-    width: '75%',
-    flexDirection: 'row',
-    height: 100,
-  },
-
-  viewIconLocation: {
-    height: '100%',
-    width: '15%',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    padding: 5,
-    alignItems: 'center',
-  },
-
-  iconLocation: {
-    width: 20,
-    height: 20,
-    tintColor: myColor.headerColor,
-  },
-
-  viewLocation: {
-    height: '100%',
-    width: '85%',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    padding: 5,
-  },
-
-  textLocation: {
-    fontWeight: '700',
-    color: '#000000',
-    fontSize: 22,
-  },
-
-  viewTime: {
-    width: '25%',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    height: 100,
-  },
-
-  textDate: {
-    alignSelf: 'center',
-    fontWeight: '500',
-    color: '#000000',
-    fontSize: 18,
-    padding: 5,
-  },
-
-  line: {
-    width: '90%',
-    height: 2,
-    backgroundColor: '#CCCCCC',
-    alignSelf: 'center',
-    margin: 20,
-  },
-
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  textfooter: {
-    fontSize: 18,
-    color: '#555555',
   },
 });

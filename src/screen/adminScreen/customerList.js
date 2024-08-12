@@ -83,7 +83,7 @@ const Customer = ({navigation}) => {
             borderTopRightRadius: 30,
             marginTop: -60,
             zIndex: 1,
-            backgroundColor: '#FAFAFA',
+            backgroundColor: myColor.containerColor,
           }}>
           {/* Tìm từ khóa */}
           <Sreach onChangeText={setSearchUser} value={searchUsers} />
@@ -115,7 +115,6 @@ export const Item = ({item, onPress}) => (
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#FFFFEE',
     }}>
     <TouchableOpacity onPress={onPress} style={{width: '90%', marginTop: 10}}>
       <ScrollView style={{width: '100%'}}>
@@ -127,6 +126,9 @@ export const Item = ({item, onPress}) => (
             alignItems: 'center',
             flexDirection: 'row',
             borderRadius: 30,
+            backgroundColor: '#FFFFEE',
+    borderColor: '#C0C0C0',
+
           }}>
           <Image
             source={require('../../assets/images/avatar-user.jpg')}

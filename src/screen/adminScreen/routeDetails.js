@@ -21,64 +21,20 @@ import {deleteRouteData} from '../../redux/actions/routeAction';
 import {deleteSeatByDates} from '../../api/seat';
 import RouteUpdate from './routeUpdate';
 import dayjs from 'dayjs';
+import TripList from './tripList';
 
+const DETAILS = 'DETAILS';
+const LISTTRIP = 'LISTTRIP';
 const RouteDetails = ({navigation}) => {
-  const {route} = useSelector(state => state.route);
-  const {buses} = useSelector(state => state.bus);
-
-  const dispatch = useDispatch();
-
-  const date = useRef(new Date()).current;
-
-  const [isVisibleDel, setIsVisibleDel] = useState(false);
-
   const [validModal, setValidModal] = useState(false);
 
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [page, setPage] = useState(DETAILS);
 
   // ẩn botttom tab
   useEffect(() => {
     const parent = navigation.getParent();
     parent?.setOptions({tabBarStyle: {display: 'none'}});
-    return () => {
-      parent?.setOptions({tabBarStyle: undefined});
-    };
   }, [navigation]);
-
-  //kiểm tra date để ẩn hoặc hiện button sửa
-  const checkDate = () => {
-    if (
-      new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() <
-      new Date(dayjs(date).format('YYYY-MM-DD')).getTime()
-    ) {
-      setIsDisabled(true);
-    }
-  };
-
-  useEffect(() => {
-    checkDate();
-  }, []);
-
-  // lấy biển số thông qua id
-  const getLicensePlateByBusId = (busId, buses) => {
-    const bus = buses.find(bus => bus._id == busId);
-    return bus ? bus.license_plate : '';
-  };
-
-  //----------------------------------------------------Xóa route //----------------------------------------------------
-  const deleteRouter = async () => {
-    await deleteSeatByDates(
-      route._id,
-      new Date(dayjs(new Date()).format('YYYY-MM-DD')),
-    );
-    const response = await dispatch(deleteRouteData(route._id));
-
-    if (response) {
-      ToastAndroid.show('Xóa thành công !', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('Không thể xóa, thử lại sau !', ToastAndroid.SHORT);
-    }
-  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -121,105 +77,224 @@ const RouteDetails = ({navigation}) => {
 
       {/* -------------------------------------------BODY----------------------------- */}
 
-      <View style={styles.busContainer}>
-        <View style={styles.rowView}>
-          <View style={{width: '100%'}}>
-            <Text style={styles.textPlate}>
-              {getLicensePlateByBusId(route.bus_id, buses)}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>Nơi xuất phát</Text>
-
-          <Text style={styles.text}>{route.start_point}</Text>
-        </View>
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>Nơi đến</Text>
-
-          <Text style={styles.text}>{route.end_point}</Text>
-        </View>
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>Ngày bắt đầu</Text>
-
-          <Text style={styles.text}>
-            {dayjs(route.start_date).format('DD/MM/YYYY')}
-          </Text>
-        </View>
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>Ngày kết thúc</Text>
-
-          <Text style={styles.text}>
-            {dayjs(route.end_date).format('DD/MM/YYYY')}
-          </Text>
-        </View>
-
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>Giờ xuất phát</Text>
-
-          <Text style={styles.text}>{route.departure_time}</Text>
-        </View>
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>
-            Thời gian di chuyển
-          </Text>
-
-          <Text style={styles.text}>{route.total_time}</Text>
-        </View>
-
-        <View style={styles.rowView}>
-          <Text style={[styles.text, {color: '#555555'}]}>Số ngày / tuyến</Text>
-
-          <Text style={styles.text}>{route.date_interval}</Text>
-        </View>
-
-        {/* ------------------------------------Button Chỉnh sửa-------------------------------------------------------------- */}
-
-        <View style={styles.viewbtn}>
-          <View style={{width: '60%'}}>
-            <MyButton
-              nameBtn={'Chỉnh sửa'}
-              isDisabled={isDisabled}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: myColor.containerColor,
+        }}>
+        <View style={styles.btncontainer}>
+          <View style={{width: '50%'}}>
+            <TouchableOpacity
+              style={styles.btnPage}
               onPress={() => {
-                setValidModal(true);
-              }}
-            />
+                setPage(DETAILS);
+              }}>
+              <Text style={styles.textBtnPage}>Chi tiết</Text>
+            </TouchableOpacity>
+            {page === DETAILS ? <View style={styles.lineBtnPage}></View> : ''}
           </View>
 
-          {/* ------------------------------------Button Xoa-------------------------------------------------------------- */}
-
-          <View style={{width: '30%'}}>
-            <ButtonDel
+          <View style={{width: '50%'}}>
+            <TouchableOpacity
+              style={styles.btnPage}
               onPress={() => {
-                setIsVisibleDel(true);
-              }}
-            />
-
-            <DeletetDialog
-              title={'Xóa thông tin tuyến đường'}
-              description={
-                'Bạn có muốn xóa thông tin tuyến đường này? Lộ trình những ngày tiếp theo cũng sẽ bị xóa!'
-              }
-              visible={isVisibleDel}
-              onCancel={() => {
-                setIsVisibleDel(false);
-              }}
-              onDelete={async () => {
-                await deleteRouter();
-                setIsVisibleDel(false);
-                navigation.goBack();
-              }}
-            />
+                setPage(LISTTRIP);
+              }}>
+              <Text style={styles.textBtnPage}>Lộ trình</Text>
+            </TouchableOpacity>
+            {page === LISTTRIP ? <View style={styles.lineBtnPage}></View> : ''}
           </View>
         </View>
+        {page === DETAILS ? (
+          <Details setValidModal={setValidModal} />
+        ) : (
+          <TripList />
+        )}
       </View>
     </SafeAreaView>
+  );
+};
+
+{
+  /* -------------------------------------------chi tiết route----------------------------- */
+}
+
+const Details = ({setValidModal}) => {
+  const {route} = useSelector(state => state.route);
+  const {buses} = useSelector(state => state.bus);
+
+  const dispatch = useDispatch();
+
+  const date = useRef(new Date()).current;
+
+  const [isVisibleDel, setIsVisibleDel] = useState(false);
+
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  // lấy biển số thông qua id
+  const getLicensePlateByBusId = (busId, buses) => {
+    const bus = buses.find(bus => bus._id == busId);
+    return bus ? bus.license_plate : '';
+  };
+
+  //kiểm tra date để ẩn hoặc hiện button sửa
+
+  const checkDate = () => {
+    if (
+      new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() <
+      new Date(dayjs(date).format('YYYY-MM-DD')).getTime()
+    ) {
+      setIsDisabled(true);
+    }
+  };
+
+  useEffect(() => {
+    checkDate();
+  }, []);
+
+  //----------------------------------------------------Xóa route //----------------------------------------------------
+  const deleteRouter = async () => {
+    await deleteSeatByDates(
+      route._id,
+      new Date(dayjs(new Date()).format('YYYY-MM-DD')),
+    );
+    const response = await dispatch(deleteRouteData(route._id));
+
+    if (response) {
+      ToastAndroid.show('Xóa thành công !', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Không thể xóa, thử lại sau !', ToastAndroid.SHORT);
+    }
+  };
+
+  return (
+    <View style={styles.busContainer}>
+      <View style={styles.rowView}>
+        <View style={{width: '100%'}}>
+          <Text style={styles.textPlate}>
+            {getLicensePlateByBusId(route.bus_id, buses)}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>Nơi xuất phát</Text>
+
+        <Text style={styles.text}>{route.start_point}</Text>
+      </View>
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>Nơi đến</Text>
+
+        <Text style={styles.text}>{route.end_point}</Text>
+      </View>
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>Ngày bắt đầu</Text>
+
+        <Text style={styles.text}>
+          {dayjs(route.start_date).format('DD/MM/YYYY')}
+        </Text>
+      </View>
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>Ngày kết thúc</Text>
+
+        <Text style={styles.text}>
+          {dayjs(route.end_date).format('DD/MM/YYYY')}
+        </Text>
+      </View>
+
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>Giờ xuất phát</Text>
+
+        <Text style={styles.text}>{route.departure_time}</Text>
+      </View>
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>
+          Thời gian di chuyển
+        </Text>
+
+        <Text style={styles.text}>{route.total_time}</Text>
+      </View>
+
+      <View style={styles.rowView}>
+        <Text style={[styles.text, {color: '#555555'}]}>Số ngày / tuyến</Text>
+
+        <Text style={styles.text}>{route.date_interval}</Text>
+      </View>
+
+      {/* ------------------------------------Button Chỉnh sửa-------------------------------------------------------------- */}
+
+      <View style={styles.viewbtn}>
+        <View style={{width: '60%'}}>
+          <MyButton
+            nameBtn={'Chỉnh sửa'}
+            isDisabled={isDisabled}
+            onPress={() => {
+              setValidModal(true);
+            }}
+          />
+        </View>
+
+        {/* ------------------------------------Button Xoa-------------------------------------------------------------- */}
+
+        <View style={{width: '30%'}}>
+          <ButtonDel
+            onPress={() => {
+              setIsVisibleDel(true);
+            }}
+          />
+
+          <DeletetDialog
+            title={'Xóa thông tin tuyến đường'}
+            description={
+              'Bạn có muốn xóa thông tin tuyến đường này? Lộ trình những ngày tiếp theo cũng sẽ bị xóa!'
+            }
+            visible={isVisibleDel}
+            onCancel={() => {
+              setIsVisibleDel(false);
+            }}
+            onDelete={async () => {
+              await deleteRouter();
+              setIsVisibleDel(false);
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    </View>
   );
 };
 
 export default RouteDetails;
 
 const styles = StyleSheet.create({
+  //---------------------styles cho buton chuyển màn hình--------------------------------
+
+  btncontainer: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+  },
+  btnPage: {
+    width: '100%',
+    height: 50,
+    elevation: 5,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  lineBtnPage: {
+    width: '100%',
+    height: 5,
+    backgroundColor: myColor.headerColor,
+  },
+
+  textBtnPage: {
+    fontSize: 20,
+    color: myColor.headerColor,
+    fontWeight: '700',
+  },
+
+  //---------------------styles cho chi tiết route--------------------------------
   busContainer: {
     flex: 1,
     alignItems: 'center',

@@ -18,17 +18,29 @@ const Stack = createNativeStackNavigator();
 const AdminNav = () => {
   return (
     <Tab.Navigator
-      initialRouteName="BusNav"
+      initialRouteName="RouteNav"
       screenOptions={{headerShown: false, tabBarHideOnKeyboard: true}}>
       <Tab.Screen name="HomeAdmin" component={HomeAdmin} />
       <Tab.Screen name="BusNav" component={BusNav} />
       <Tab.Screen name="RouteNav" component={RouteNav} />
       <Tab.Screen name="CustomerNav" component={CustomerNav} />
-      <Tab.Screen name="TestScreen" component={TestScreen} />
     </Tab.Navigator>
   );
 };
 export default AdminNav;
+
+export const BusNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="BusList"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="BusList" component={BusList} />
+      <Stack.Screen name="BusDetails" component={BusDetails} />
+      <Stack.Screen name="AddRoute" component={AddRoute} />
+      <Stack.Screen name="RouteDetails" component={RouteDetails} />
+    </Stack.Navigator>
+  );
+};
 
 export const RouteNav = () => {
   return (
@@ -49,17 +61,6 @@ export const CustomerNav = () => {
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="CustomerList" component={CustomerList} />
       <Stack.Screen name="CustomerDetails" component={CustomerDetails} />
-    </Stack.Navigator>
-  );
-};
-
-export const BusNav = () => {
-  return (
-    <Stack.Navigator
-      initialRouteName="BusList"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="BusList" component={BusList} />
-      <Stack.Screen name="BusDetails" component={BusDetails} />
     </Stack.Navigator>
   );
 };

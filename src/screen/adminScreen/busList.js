@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
@@ -19,6 +19,7 @@ import {getAllbusAPI} from '../../api/busesAPI';
 import {formatDate, formatDateFromISOString} from '../../constants/formatDate';
 import AddBus from './busAdd';
 import {selectBus, getAllbusData} from '../../redux/actions/busAction';
+import {getAllrouteData} from '../../redux/actions/routeAction';
 import {useDispatch, useSelector} from 'react-redux';
 
 //------------------------------------Danh sách Xe----------------------------------------------
@@ -29,21 +30,27 @@ const BusList = ({navigation}) => {
   const {buses} = useSelector(state => state.bus);
   const dispatch = useDispatch();
 
+  //---------------------------------------------hiển thị bottom tab---------------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({tabBarStyle: {display: undefined}});
+    }, [navigation]),
+  );
+
+  //---------------------------------------------gọi data---------------------------------------------
+
   const getBuses = async () => {
     await dispatch(getAllbusData());
   };
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if (validModal === false) {
-  //       getBuses();
-  //       console.log('goi api');
-  //     }
-  //   }, [validModal]),
-  // );
+  const getRoutes = async () => {
+    await dispatch(getAllrouteData());
+  };
 
   useEffect(() => {
     getBuses();
+    getRoutes();
   }, []);
 
   const Item = ({item, onPress}) => (
@@ -180,7 +187,7 @@ const style = StyleSheet.create({
 
   viewBody: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: myColor.containerColor,
     marginTop: -40,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

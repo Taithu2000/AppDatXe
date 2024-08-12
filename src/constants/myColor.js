@@ -3,4 +3,5 @@ export const myColor = {
   textBtnColor: '#FFFFFF',
   iconcolor: '#FFA500',
   headerColor: '#FFA500',
+  containerColor: '#FAFAFA',
 };

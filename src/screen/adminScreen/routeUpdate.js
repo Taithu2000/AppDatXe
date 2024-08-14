@@ -23,6 +23,9 @@ import {myColor} from '../../constants/myColor';
 import {MyButton} from '../../components/myButton';
 import {updateRouteData} from '../../redux/actions/routeAction';
 import {getSeatAPI, deleteSeatByDates} from '../../api/seat';
+import MyCaledarFull from '../../components/myCaledarFull';
+import MyDropdown from '../../components/myDropdown';
+import MyPickerHours from '../../components/MyPickerHours';
 import axios from 'axios';
 const {height, width} = Dimensions.get('window');
 const IP = 'http://10.0.2.2:3306';
@@ -180,6 +183,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
             {/*------------------------------------------- Cập nhật biển số xe----------------------------------------- */}
             <View style={styles.containerDrop}>
               <Text style={{fontSize: 16}}>Xe</Text>
+
               <Dropdown
                 style={[styles.dropdown, isFocusPlate && {borderColor: 'blue'}]}
                 placeholderStyle={styles.placeholderStyle}
@@ -229,57 +233,23 @@ const RouteUpdate = ({validModal, setValidModal}) => {
               </View>
             </View>
 
-            <Modal visible={isModalend_date} transparent={true}>
-              <View style={styles.modalCaledar}>
-                <View style={styles.viewCaledar}>
-                  <DateTimePicker
-                    mode="single"
-                    headerContainerStyle={{
-                      backgroundColor: myColor.headerColor,
-                    }}
-                    headerTextStyle={{color: '#FFFFFF', fontSize: 18}}
-                    headerButtonColor={'#FFFFFF'}
-                    weekDaysTextStyle={{color: '#000000', fontSize: 16}}
-                    selectedItemColor={myColor.headerColor}
-                    minDate={compareDate() ? route.start_date : yesterday}
-                    maxDate={route.end_date}
-                    date={select_end_date}
-                    onChange={params => {
-                      setSelect_end_date(params.date);
-                    }}
-                  />
-
-                  <View
-                    style={{
-                      marginBottom: 10,
-                      marginTop: -20,
-                      width: '95%',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View></View>
-                    <View></View>
-
-                    <TouchableOpacity
-                      style={styles.btnCalendar}
-                      onPress={() => {
-                        setIsModalend_date(false);
-                        setEnd_date(select_end_date);
-                      }}>
-                      <Text style={{color: '#FFFFFF', fontSize: 18}}>Hủy</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.btnCalendar}
-                      onPress={() => {
-                        setIsModalend_date(false);
-                        setEnd_date(select_end_date);
-                      }}>
-                      <Text style={{color: '#FFFFFF', fontSize: 18}}>Chọn</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal>
+            <MyCaledarFull
+              visible={isModalend_date}
+              minDate={compareDate() ? route.start_date : yesterday}
+              maxDate={route.end_date}
+              date={select_end_date}
+              onChange={params => {
+                setSelect_end_date(params.date);
+              }}
+              onPressbtnLater={() => {
+                setIsModalend_date(false);
+                setEnd_date(select_end_date);
+              }}
+              onPressbtnSelect={() => {
+                setIsModalend_date(false);
+                setEnd_date(select_end_date);
+              }}
+            />
 
             {/*------------------------------------------- Cập nhật nơi bắt đầu----------------------------------------- */}
 
@@ -401,6 +371,21 @@ const RouteUpdate = ({validModal, setValidModal}) => {
               </View>
             </View>
 
+
+            <MyPickerHours
+              visible={isTotal_time}
+              selectedIndex={selectedIndex}
+              options={dataTotal_time}
+              onChange={index => setSelectedIndex(index)}
+              onPressCancel={() => {
+                setIsTotal_time(false);
+              }}
+              onPressSelect={() => {
+                setTotal_time(dataTotal_time[selectedIndex]);
+                setIsTotal_time(false);
+              }}
+            />
+{/* 
             <Modal visible={isTotal_time} transparent={true}>
               <View style={styles.modalCaledar}>
                 <View
@@ -493,7 +478,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
                   </View>
                 </View>
               </View>
-            </Modal>
+            </Modal> */}
 
             {/*------------------------------- Button Cập nhật tuyến đường------------------------------- */}
 

@@ -22,8 +22,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {updateBus} from '../../redux/actions/busAction';
 import {formatDateFromISOString} from '../../constants/formatDate';
 import axios from 'axios';
+import dayjs from 'dayjs';
 const {height, width} = Dimensions.get('window');
-const IP = 'http://10.0.2.2:3306';
 
 const BusUpdate = ({validModal, setValidModal}) => {
   const dataType = [
@@ -62,6 +62,8 @@ const BusUpdate = ({validModal, setValidModal}) => {
   const [validType, setValidType] = useState(true);
   const [validBrand, setValidBrand] = useState(true);
   const [validNumseats, setValidNumseats] = useState(true);
+
+  console.log(registration_date);
 
   //kiểm tra biển số
   const verifyPlate = plate => {
@@ -202,7 +204,7 @@ const BusUpdate = ({validModal, setValidModal}) => {
                   }}
                   editable={false}
                   placeholder="DD/MM/YYYY"
-                  value={formatDateFromISOString(registration_date)}
+                  value={dayjs(registration_date).format('DD/MM/YYYY')}
                 />
 
                 <TouchableOpacity
@@ -232,7 +234,7 @@ const BusUpdate = ({validModal, setValidModal}) => {
               date={date}
               onConfirm={date => {
                 setOpen(false);
-                setRegistration_date(formatDate(date));
+                setRegistration_date(date);
                 setValidDate(true);
               }}
               onCancel={() => {

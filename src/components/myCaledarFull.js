@@ -5,7 +5,7 @@ import {myColor} from '../constants/myColor';
 
 const MyCaledarFull = ({
   visible,
-  mindate,
+  minDate,
   maxDate,
   date,
   onChange,
@@ -27,7 +27,7 @@ const MyCaledarFull = ({
             weekDaysTextStyle={{color: '#000000', fontSize: 16}}
             selectedItemColor={myColor.headerColor}
             //----------------------------------------------------------------
-            minDate={mindate}
+            minDate={minDate}
             maxDate={maxDate}
             date={date}
             onChange={onChange}

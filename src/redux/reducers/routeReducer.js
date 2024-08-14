@@ -51,6 +51,11 @@ const routeReducer = (state = initialState, action) => {
         }
       });
 
+      return {
+        ...state,
+        routes: updateRoute,
+        route: action.payload,
+      };
     case DELETE_ROUTE:
       const deleteRoute = state.routes.filter(route => {
         return route._id !== action.payload;

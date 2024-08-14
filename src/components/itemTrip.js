@@ -1,35 +1,53 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {myColor} from '../constants/myColor';
+import {calculateEndTime} from '../constants/fomatHH-mm';
 import {useSelector} from 'react-redux';
-const ItemTrip = ({item, onPress}) => {
+const ItemTrip = ({item, seat, onPress}) => {
+  const {buses} = useSelector(state => state.bus);
+
+  // lấy tên xe thông qua  route_id
+  const NameByBusId = (busId, buses) => {
+    const bus = buses.find(bus => bus._id == busId);
+    return bus ? bus.type : '';
+  };
+
   return (
     <TouchableOpacity style={styles.tripContainer} onPress={onPress}>
       <View style={styles.itemContainer}>
         <View style={styles.hederItem}>
-          <Text style={styles.nameBus}>giường nằm 34 chỗ</Text>
-          <Text style={styles.emptySeat}>Còn 34 chỗ trống</Text>
+          <Text style={styles.nameBus}>{`${NameByBusId(item.bus_id, buses)} 
+          ${seat ? seat.total_seats : ''} chỗ`}</Text>
+          <Text style={styles.emptySeat}>
+            {seat
+              ? seat.available_seats == 0
+                ? 'Hết chỗ'
+                : `Còn ${seat.available_seats} chỗ trống`
+              : ''}
+          </Text>
         </View>
         <View style={styles.timeItem}>
-          <Text style={styles.time}>10:45</Text>
+          <Text style={styles.time}>{item.pickupTime}</Text>
           <View
             style={{flexDirection: 'row', alignItems: 'center', width: '15%'}}>
             <View style={styles.circleTime}></View>
             <View style={styles.lineTime}></View>
           </View>
 
-          <Text style={{fontSize: 18, color: '#007ce8'}}>10:45</Text>
+          <Text style={{fontSize: 18, color: '#007ce8'}}>{item.totalTime}</Text>
           <View
             style={{flexDirection: 'row', alignItems: 'center', width: '15%'}}>
             <View style={styles.lineTime}></View>
             <View style={styles.circleTime1}></View>
           </View>
-          <Text style={styles.time}>10:45</Text>
+          <Text style={styles.time}>
+            {calculateEndTime(item.pickupTime, item.totalTime)}
+          </Text>
         </View>
 
         <View style={styles.locationItem}>
           <View style={{width: '45%'}}>
-            <Text style={styles.textLocation}>điểm đón</Text>
+            <Text style={styles.textLocation}>{item.pickup}</Text>
           </View>
           <View
             style={{
@@ -37,7 +55,7 @@ const ItemTrip = ({item, onPress}) => {
               flexDirection: 'row',
               justifyContent: 'flex-end',
             }}>
-            <Text style={styles.textLocation}>điểm trả</Text>
+            <Text style={styles.textLocation}>{item.drop_off}</Text>
           </View>
         </View>
 
@@ -57,7 +75,11 @@ const ItemTrip = ({item, onPress}) => {
                 Giá vé:{' '}
               </Text>
             </View>
-            <Text style={styles.textMoney}>350.000đ</Text>
+            <Text style={styles.textMoney}>
+              {`${item.ticket_price
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ`}
+            </Text>
           </View>
         </View>
       </View>
@@ -131,6 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    height: 45,
   },
 
   textLocation: {
@@ -159,19 +182,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     position: 'absolute',
     top: -12,
-    left: 0,
+    left: -1,
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
-    backgroundColor: myColor.containerColor,
+    backgroundColor: '#cbd5d6',
   },
 
   semicircleRight: {
     width: 12,
     height: 24,
-    backgroundColor: myColor.containerColor,
+    backgroundColor: '#cbd5d6',
     position: 'absolute',
     top: -12,
-    right: 0,
+    right: -1,
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
     zIndex: 1,

@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColor} from '../constants/myColor';
 import {useSelector} from 'react-redux';
-
+import {calculateEndTime} from '../constants/fomatHH-mm';
+import dayjs from 'dayjs';
 const ItemRoute = ({item, onPress}) => {
   const {buses} = useSelector(state => state.bus);
 
@@ -11,6 +12,8 @@ const ItemRoute = ({item, onPress}) => {
     const bus = buses.find(bus => bus._id == busId);
     return bus ? bus.license_plate : '';
   };
+
+ 
 
   return (
     <View style={styles.containerItem}>
@@ -44,9 +47,13 @@ const ItemRoute = ({item, onPress}) => {
           </View>
 
           <View style={styles.viewTime}>
-            <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
+            <Text style={[styles.textPlate, {color: '#0099FF'}]}>
+              {item.departure_time}
+            </Text>
 
-            <Text style={[styles.textPlate, {color: '#0099FF'}]}>16:30</Text>
+            <Text style={[styles.textPlate, {color: '#0099FF'}]}>
+              {calculateEndTime(item.departure_time, item.total_time)}
+            </Text>
           </View>
         </View>
 

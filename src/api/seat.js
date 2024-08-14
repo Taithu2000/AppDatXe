@@ -14,10 +14,22 @@ export const getSeatAPI = async route_id => {
   }
 };
 
-// lấy thông tin của seat qua route_id
+// lấy thông tin của seat qua route_id và date
+export const getSeatByRouteIdandDate = async (route_id, date) => {
+  try {
+    const response = await axios.get(`${IP}/seat/${route_id}/${date}`);
+    return response.data;
+  } catch (e) {
+    throw new Error('Lỗi lấy dữ liệu: ', e);
+  }
+};
+
+// xóax thông tin của seat qua route_id
 export const deleteSeatByDates = async (route_id, date) => {
   try {
-    const response = await axios.delete(`${IP}/seat/delete/${route_id}/${date}`);
+    const response = await axios.delete(
+      `${IP}/seat/delete/${route_id}/${date}`,
+    );
   } catch (e) {
     throw new Error('Lỗi lấy dữ liệu: ', e);
   }

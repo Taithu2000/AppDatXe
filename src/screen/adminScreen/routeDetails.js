@@ -15,7 +15,7 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {MyButton} from '../../components/myButton';
 import {ButtonDel} from '../../components/buttonDel';
 import axios from 'axios';
-import {DeletetDialog} from '../../components/mydialog';
+import {DeletetDialog} from '../../components/mydialogDelete';
 import {useSelector, useDispatch} from 'react-redux';
 import {deleteRouteData} from '../../redux/actions/routeAction';
 import {deleteSeatByDates} from '../../api/seat';
@@ -106,9 +106,9 @@ const RouteDetails = ({navigation}) => {
           </View>
         </View>
         {page === DETAILS ? (
-          <Details setValidModal={setValidModal} />
+          <Details setValidModal={setValidModal} navigation={navigation} />
         ) : (
-          <TripList />
+          <TripList navigation={navigation} />
         )}
       </View>
     </SafeAreaView>
@@ -116,10 +116,12 @@ const RouteDetails = ({navigation}) => {
 };
 
 {
-  /* -------------------------------------------chi tiết route----------------------------- */
+  /* ------------------------------------------- PAGE chi tiết route----------------------------- */
+  /* -------------------------------------------PAGE chi tiết route----------------------------- */
+  /* ------------------------------------------- PAGE chi tiết route----------------------------- */
 }
 
-const Details = ({setValidModal}) => {
+const Details = ({setValidModal, navigation}) => {
   const {route} = useSelector(state => state.route);
   const {buses} = useSelector(state => state.bus);
 

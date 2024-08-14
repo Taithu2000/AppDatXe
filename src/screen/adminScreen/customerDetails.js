@@ -21,7 +21,7 @@ import {MyButton} from '../../components/myButton';
 import {useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
-import {DeletetDialog} from '../../components/mydialog';
+import {DeletetDialog} from '../../components/mydialogDelete';
 import {
   formatDate,
   formatDateFromISOString,

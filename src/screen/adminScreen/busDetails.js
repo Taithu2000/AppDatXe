@@ -16,7 +16,7 @@ import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MyButton} from '../../components/myButton';
 import {ButtonDel} from '../../components/buttonDel';
-import {DeletetDialog} from '../../components/mydialog';
+import {DeletetDialog} from '../../components/mydialogDelete';
 import {useSelector, useDispatch} from 'react-redux';
 import {formatDateFromISOString} from '../../constants/formatDate';
 import BusUpdate from './busUpdate';

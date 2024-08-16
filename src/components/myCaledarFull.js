@@ -2,7 +2,11 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import DateTimePicker from 'react-native-ui-datepicker';
 import {myColor} from '../constants/myColor';
-
+import utc from 'dayjs/plugin/utc';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
+dayjs.extend(utc);
+dayjs.locale('vi');
 const MyCaledarFull = ({
   visible,
   minDate,
@@ -21,6 +25,8 @@ const MyCaledarFull = ({
             locale={'vi'}
             headerContainerStyle={{
               backgroundColor: myColor.headerColor,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
             }}
             headerTextStyle={{color: '#FFFFFF', fontSize: 18}}
             headerButtonColor={'#FFFFFF'}
@@ -69,7 +75,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  viewCaledar: {width: '90%', backgroundColor: '#FFF'},
+  viewCaledar: {
+    width: '90%',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+  },
 
   btnCalendar: {
     width: 80,

@@ -6,11 +6,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Modal,
-  Dimensions,
   ToastAndroid,
-  Keyboard,
-  Alert,
   SafeAreaView,
   StatusBar,
   ScrollView,
@@ -35,9 +31,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
   const {buses} = useSelector(state => state.bus);
   const [dataProvince, setDataProvince] = useState([]);
 
-  const [yesterday, setYesterday] = useState(
-    new Date().setDate(new Date().getDate() - 1),
-  );
+  const date = dayjs().startOf('day');
 
   const [bus_id, setBus_id] = useState(null);
   const [isFocusPlate, setIsFocusPlate] = useState(false);
@@ -175,8 +169,8 @@ const AddRoute = ({navigation, route: myRoute}) => {
   const addRoute = async () => {
     const data = {
       bus_id,
-      start_date: dayjs(start_date).format('YYYY-MM-DD'),
-      end_date: dayjs(end_date).format('YYYY-MM-DD'),
+      start_date,
+      end_date,
       start_point,
       end_point,
       departure_time,
@@ -338,8 +332,8 @@ const AddRoute = ({navigation, route: myRoute}) => {
 
             <MyCaledarFull
               visible={isModalstart_date}
-              minDate={yesterday}
-              maxDate={end_date ? end_date : new Date('2100-12-31')}
+              minDate={date}
+              maxDate={end_date ? end_date : new Date('2050-12-31')}
               date={select_start_date}
               onChange={params => {
                 setSelect_start_date(params.date);
@@ -386,7 +380,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
 
             <MyCaledarFull
               visible={isModalend_date}
-              minDate={start_date ? start_date : yesterday}
+              minDate={start_date ? start_date : date}
               date={select_end_date}
               onChange={params => {
                 setSelect_end_date(params.date);
@@ -402,6 +396,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
                 setValidEnd_date(true);
               }}
             />
+            {console.log(date)}
 
             {/*------------------------------------------- Thêm nơi bắt đầu----------------------------------------- */}
 
@@ -503,6 +498,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
                   placeholder="Thời gian di chuyển"
                   style={styles.textInput}
                   value={total_time}
+                  editable={false}
                 />
                 <TouchableOpacity
                   style={styles.btn}

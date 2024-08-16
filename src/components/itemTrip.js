@@ -5,6 +5,7 @@ import {calculateEndTime} from '../constants/fomatHH-mm';
 import {useSelector} from 'react-redux';
 const ItemTrip = ({item, seat, onPress}) => {
   const {buses} = useSelector(state => state.bus);
+  const {route} = useSelector(state => state.route);
 
   // lấy tên xe thông qua  route_id
   const NameByBusId = (busId, buses) => {
@@ -16,7 +17,7 @@ const ItemTrip = ({item, seat, onPress}) => {
     <TouchableOpacity style={styles.tripContainer} onPress={onPress}>
       <View style={styles.itemContainer}>
         <View style={styles.hederItem}>
-          <Text style={styles.nameBus}>{`${NameByBusId(item.bus_id, buses)} 
+          <Text style={styles.nameBus}>{`${NameByBusId(route.bus_id, buses)} 
           ${seat ? seat.total_seats : ''} chỗ`}</Text>
           <Text style={styles.emptySeat}>
             {seat

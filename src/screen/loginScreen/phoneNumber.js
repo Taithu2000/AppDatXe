@@ -11,7 +11,7 @@ import axios from 'axios';
 import {MyInput} from '../../components/myTextInput';
 import {MyButton} from '../../components/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
-import {fetchUserData} from '../../redux/actions/userAction';
+import {getUserByPhone} from '../../redux/actions/userAction';
 import {useDispatch, useSelector} from 'react-redux';
 
 const windowHeight = Dimensions.get('window').height;
@@ -51,7 +51,7 @@ const PhoneNumber = ({navigation}) => {
 
   const clickbtn = async () => {
     setIsLoading(true);
-    const err = await dispatch(fetchUserData(phoneNumber));
+    const err = await dispatch(getUserByPhone(phoneNumber));
     setError(err);
     setIsLoading(false);
   };

@@ -5,7 +5,7 @@ export const MyStatusBar = () => {
   return (
     <StatusBar
       backgroundColor="rgba(0, 0, 0, 0)"
-      barStyle="dark-content"
+      barStyle="light-content"
       translucent={true}
     />
   );

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -19,15 +19,25 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
-import dayjs from 'dayjs';
 import MyDropdown from '../../components/myDropdown';
 import MyPickerHours from '../../components/MyPickerHours';
-import {addTripByRouteId} from '../../api/tripsAPI';
+import {
+  updateTripById,
+  updateManyTripByGroupId,
+  deleteTripById,
+  deleteManyTripByGroupId,
+} from '../../api/tripsAPI';
 import {ButtonDel} from '../../components/buttonDel';
 import DialogSelect from '../../components/dialogSelect';
+import {compareHourNow_Departure_time} from '../../constants/fomatHH-mm';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 const TripDetails = ({navigation, route: myRoute}) => {
   const trip = myRoute.params.item;
+
+  const [today, setToday] = useState(dayjs().startOf('day'));
 
   const [dataProvince, setDataProvince] = useState([]);
 
@@ -121,6 +131,23 @@ const TripDetails = ({navigation, route: myRoute}) => {
     return flag;
   };
 
+  //-------------------------------------Kiểm tra thời gian để ẩn nút sửa xóa//-------------------------------------
+
+  const checkDisableBtn = () => {
+    if (new Date(today).getTime() > new Date(trip.trip_date).getTime()) {
+      return true;
+    } else if (new Date(today).getTime() < new Date(trip.trip_date).getTime()) {
+      return false;
+    } else {
+      if (compareHourNow_Departure_time(trip.pickupTime)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
+
+
   //----------------------------------thêm giá trị vào pickerHours--------------------------------------------
 
   useEffect(() => {
@@ -154,25 +181,71 @@ const TripDetails = ({navigation, route: myRoute}) => {
     getDataProvince();
   }, []);
 
-  // --------------------------------gọi api để thêm lộ trình--------------------------------
+  // -------------------------------------------------gọi api ----------------------------------------
 
-  const addTrip = async () => {
-    // const data = {
-    //   route_id: route._id,
-    //   start_point,
-    //   end_point,
-    //   pickup,
-    //   drop_off,
-    //   pickupTime,
-    //   totalTime,
-    //   ticket_price,
-    // };
-    // const response = await addTripByRouteId(data);
-    // if (response) {
-    //   ToastAndroid.show('Thêm thành công !', ToastAndroid.SHORT);
-    // } else {
-    //   ToastAndroid.show('Không thể thêm, thử lại sau !', ToastAndroid.SHORT);
-    // }
+  // -----------------------UpdateOne------------------------
+  const updateTrip = async () => {
+    const data = {
+      start_point,
+      end_point,
+      pickup,
+      drop_off,
+      pickupTime,
+      totalTime,
+      ticket_price,
+    };
+    const response = await updateTripById(trip._id, data);
+    if (response) {
+      ToastAndroid.show('Sửa thành công !', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Không thể sửa, thử lại sau !', ToastAndroid.SHORT);
+    }
+  };
+
+  // -----------------------UpdateMany-----------------------
+  const updateManyTrip = async () => {
+    const data = {
+      start_point,
+      end_point,
+      pickup,
+      drop_off,
+      pickupTime,
+      totalTime,
+      ticket_price,
+    };
+    const response = await updateManyTripByGroupId(
+      trip.groupId,
+      trip.trip_date,
+      data,
+    );
+    if (response) {
+      ToastAndroid.show('Sửa thành công !', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Không thể sửa, thử lại sau !', ToastAndroid.SHORT);
+    }
+  };
+
+  // -----------------------Delete One------------------------
+  const deleteTrip = async () => {
+    const response = await deleteTripById(trip._id);
+    if (response) {
+      ToastAndroid.show('Xóa thành công !', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Không thể xóa, thử lại sau !', ToastAndroid.SHORT);
+    }
+  };
+
+  // -----------------------Delete Many------------------------
+  const deleteManyTrip = async () => {
+    const response = await deleteManyTripByGroupId(
+      trip.groupId,
+      trip.trip_date,
+    );
+    if (response) {
+      ToastAndroid.show('Xóa thành công !', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Không thể xóa, thử lại sau !', ToastAndroid.SHORT);
+    }
   };
 
   // --------------------------------tạo label cho dropdown----------------------------------------
@@ -500,9 +573,9 @@ const TripDetails = ({navigation, route: myRoute}) => {
                   onPress={() => {
                     setIsOpenUpdate(true);
                   }}
+                  isDisabled={checkDisableBtn()}
                 />
               </View>
-
               <DialogSelect
                 visible={isOpenUpdate}
                 title={'Cập nhật'}
@@ -511,16 +584,21 @@ const TripDetails = ({navigation, route: myRoute}) => {
                 checked={checkUpdate}
                 setChecked={setCheckUpdate}
                 onPressCancel={() => setIsOpenUpdate(false)}
-                onPressBtn={() => {
-                  console.log(checkUpdate);
+                onPressBtn={async () => {
+                  if (checkUpdate === 0) {
+                    await updateTrip();
+                  } else {
+                    await updateManyTrip();
+                  }
+                  setIsOpenUpdate(false);
                 }}
                 colorBtn={myColor.buttonColor}
                 textBtn={'Cập nhật'}
               />
               {/*------------------------------- Button xóa lộ trình------------------------------- */}
-
               <View style={{width: '30%'}}>
                 <ButtonDel
+                  disabled={checkDisableBtn()}
                   onPress={() => {
                     setIsOpenDelete(true);
                   }}
@@ -535,8 +613,14 @@ const TripDetails = ({navigation, route: myRoute}) => {
                 checked={checkDelete}
                 setChecked={setCheckDelete}
                 onPressCancel={() => setIsOpenDelete(false)}
-                onPressBtn={() => {
-                  console.log(checkDelete);
+                onPressBtn={async () => {
+                  if (checkDelete === 0) {
+                    await deleteTrip();
+                  } else {
+                    await deleteManyTrip();
+                  }
+                  setIsOpenDelete(false);
+                  navigation.goBack();
                 }}
                 colorBtn={'red'}
                 textBtn={'Xóa'}

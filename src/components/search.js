@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, View, TextInput, Image} from 'react-native';
 
-export const Sreach = ({onPress, onChangeText, value}) => {
+export const Search = ({onPress, onChangeText, value}) => {
   return (
     <View
       style={{
@@ -23,6 +23,7 @@ export const Sreach = ({onPress, onChangeText, value}) => {
           paddingLeft: 20,
           fontSize: 16,
           paddingRight: 50,
+          backgroundColor: '#FFFFFF',
         }}
         onChangeText={onChangeText}
         value={value}

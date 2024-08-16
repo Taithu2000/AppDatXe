@@ -4,9 +4,7 @@ import {myColor} from '../constants/myColor';
 import MyCaledarFull from './myCaledarFull';
 
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/vi';
-dayjs.extend(utc);
 dayjs.locale('Vi');
 
 const HeaderTripList = ({date, setDate, onPress}) => {
@@ -45,7 +43,7 @@ const HeaderTripList = ({date, setDate, onPress}) => {
         }}
         onPressbtnSelect={() => {
           setIsVisibleModal(false);
-          setDate(selectedDate.utc().startOf('day').add(1, 'day'));
+          setDate(selectedDate.startOf('day'));
         }}
       />
 

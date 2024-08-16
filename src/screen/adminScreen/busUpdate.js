@@ -29,7 +29,6 @@ const BusUpdate = ({validModal, setValidModal}) => {
   const dataType = [
     {label: 'Giường nằm', value: 'Giường nằm'},
     {label: 'Limousine ', value: 'Limousine'},
-    {label: 'Du lịch 16 chỗ', value: 'Du lịch 16 chỗ'},
   ];
 
   const dataBrand = [

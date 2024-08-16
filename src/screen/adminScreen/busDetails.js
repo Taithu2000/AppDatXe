@@ -51,13 +51,14 @@ const CustomerDetails = ({navigation}) => {
   };
 
   // ---------------------------------------------ẩn bottom tab---------------------------------------------
-  useFocusEffect(
-    useCallback(() => {
-      const parent = navigation.getParent();
-      parent?.setOptions({tabBarStyle: {display: 'none'}});
-    }, [navigation]),
-  );
-  //--------------------------------------------- kiểm tra có tuyến đường hay không---------------------------------------------
+
+  useEffect(() => {
+    const parent = navigation.getParent();
+    parent?.setOptions({tabBarStyle: {display: 'none'}});
+  }, []);
+
+  //----------------//---------------- kiểm tra có tuyến đường hay không---//--------------------------------
+
   useEffect(() => {
     const checkData = routes.some(route => {
       const end_date = new Date(
@@ -70,7 +71,7 @@ const CustomerDetails = ({navigation}) => {
       return route.bus_id == bus._id && end_date >= date_now;
     });
     setIsvalidData(checkData);
-  }, []);
+  }, [routes]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -178,9 +179,7 @@ const CustomerDetails = ({navigation}) => {
 
               <DeletetDialog
                 title={'Xóa thông tin xe'}
-                description={
-                  'Bạn có muốn xóa thông tin xe này? Thông tin của cả lộ trình cũng sẽ bị xóa!'
-                }
+                description={'Bạn có chắc muốn xóa thông tin xe này?'}
                 visible={isVisibleDel}
                 onCancel={() => {
                   setIsVisibleDel(false);
@@ -236,6 +235,7 @@ const CustomerDetails = ({navigation}) => {
             }
           })}
 
+          {console.log(isvalidData)}
           {isvalidData ? (
             <Text></Text>
           ) : (

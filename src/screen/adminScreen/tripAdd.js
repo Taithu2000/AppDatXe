@@ -6,11 +6,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Modal,
-  Dimensions,
   ToastAndroid,
-  Keyboard,
-  Alert,
   SafeAreaView,
   StatusBar,
   ScrollView,
@@ -21,7 +17,6 @@ import {myColor} from '../../constants/myColor';
 import {MyButton} from '../../components/myButton';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {useDispatch, useSelector} from 'react-redux';
-import {addRouteData} from '../../redux/actions/routeAction';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
 import dayjs from 'dayjs';

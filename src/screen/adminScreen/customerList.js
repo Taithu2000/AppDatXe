@@ -1,21 +1,21 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {Component, useEffect, useState, useCallback} from 'react';
 import {
   SafeAreaView,
   View,
   Image,
   Text,
   StatusBar,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   FlatList,
 } from 'react-native';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
-import {Sreach} from '../../components/search';
-import {fetchUsersDataSSS} from '../../redux/actions/userAction';
+import {Search} from '../../components/search';
+import {fetchUsersDataSSS, getOneUse} from '../../redux/actions/userAction';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import {customStyles} from '../../constants/customStyles';
 
 const Customer = ({navigation}) => {
   const users = useSelector(state => state.user.users);
@@ -23,16 +23,24 @@ const Customer = ({navigation}) => {
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchUsers, setSearchUser] = useState('');
 
+  //--------------------------------------------lấy data danh sách users---------------------------------------------
+
   const handleUser = async () => {
     await dispatch(fetchUsersDataSSS());
-    // setIsValidData(true);
   };
 
+  useEffect(() => {
+    handleUser();
+  }, []);
+
+  //---------------------------------------------hiển thị bottom tab---------------------------------------------
   useFocusEffect(
-    React.useCallback(() => {
-      handleUser();
-    }, []),
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({tabBarStyle: customStyles.bottomTab});
+    }, [navigation]),
   );
+
   const handleSearch = () => {
     const filtered = users.filter(user => {
       const nameSearch = user.name
@@ -86,18 +94,22 @@ const Customer = ({navigation}) => {
             backgroundColor: myColor.containerColor,
           }}>
           {/* Tìm từ khóa */}
-          <Sreach onChangeText={setSearchUser} value={searchUsers} />
+          <Search onChangeText={setSearchUser} value={searchUsers} />
 
           {/* danh sách */}
           <FlatList
             data={filteredUsers}
             renderItem={({item}) => (
               <Item
-                onPress={() => navigation.navigate('CustomerDetails', {item})}
+                onPress={() => {
+                  dispatch(getOneUse(item)),
+                    navigation.navigate('CustomerDetails');
+                }}
                 item={item}
               />
             )}
             keyExtractor={item => item._id}
+            ListFooterComponent={<View style={{height: 75}} />}
           />
         </View>
       </View>
@@ -127,8 +139,7 @@ export const Item = ({item, onPress}) => (
             flexDirection: 'row',
             borderRadius: 30,
             backgroundColor: '#FFFFEE',
-    borderColor: '#C0C0C0',
-
+            borderColor: '#C0C0C0',
           }}>
           <Image
             source={require('../../assets/images/avatar-user.jpg')}

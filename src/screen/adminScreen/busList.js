@@ -21,6 +21,7 @@ import AddBus from './busAdd';
 import {selectBus, getAllbusData} from '../../redux/actions/busAction';
 import {getAllrouteData} from '../../redux/actions/routeAction';
 import {useDispatch, useSelector} from 'react-redux';
+import {customStyles} from '../../constants/customStyles';
 
 //------------------------------------Danh sách Xe----------------------------------------------
 
@@ -34,7 +35,7 @@ const BusList = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       const parent = navigation.getParent();
-      parent?.setOptions({tabBarStyle: {display: undefined}});
+      parent?.setOptions({tabBarStyle: customStyles.bottomTab});
     }, [navigation]),
   );
 
@@ -133,6 +134,7 @@ const BusList = ({navigation}) => {
             )}
             keyExtractor={item => item._id}
             numColumns={2}
+            ListFooterComponent={<View style={{height: 75}} />}
           />
         </View>
       </View>

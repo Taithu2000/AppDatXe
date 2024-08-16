@@ -7,10 +7,7 @@ import {
   StatusBar,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  FlatList,
-  KeyboardAvoidingView,
-  ToastAndroid,Button 
+  ToastAndroid,
 } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import {MyStatusBar} from '../../components/myStatusBar';
@@ -18,23 +15,19 @@ import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
 import DatePicker from 'react-native-date-picker';
 import {MyButton} from '../../components/myButton';
-import {useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
 import {DeletetDialog} from '../../components/mydialogDelete';
-import {
-  formatDate,
-  formatDateFromISOString,
-  convertDateFormat,
-} from '../../constants/formatDate';
+
+import dayjs from 'dayjs';
 
 // import {IP} from '@env';
 
 const IP = 'http://10.0.2.2:3306';
 
-const CustomerDetails = ({navigation, route}) => {
-  const user = route.params.item;
-  // const user = {name: '', emai: '', password: '', phoneNumber: ''};
+const CustomerDetails = ({navigation}) => {
+  const {user} = useSelector(state => state.user);
   const date = useRef(new Date()).current;
 
   const [open, setOpen] = useState(false);
@@ -69,9 +62,6 @@ const CustomerDetails = ({navigation, route}) => {
   useEffect(() => {
     const parent = navigation.getParent();
     parent?.setOptions({tabBarStyle: {display: 'none'}});
-    return () => {
-      parent?.setOptions({tabBarStyle: undefined});
-    };
   }, [navigation]);
 
   //-----------------------------gửi dữ liệu cập nhật thông tin-------------------------
@@ -81,11 +71,11 @@ const CustomerDetails = ({navigation, route}) => {
       password,
       email,
       sex,
-      birthDate: convertDateFormat(birthDate),
+      birthDate: dayjs(birthDate).format('YYYY-MM-DD'),
     };
 
     try {
-      await axios.put(`${IP}/users/update/${phoneNumber}`, data);
+      await axios.put(`${IP}/users/update/${user._id}`, data);
       ToastAndroid.show('Cập nhật thông tin thành công !', ToastAndroid.SHORT);
     } catch (e) {
       console.log('Lỗi cập nhật thông tin: ', e);
@@ -345,7 +335,7 @@ const CustomerDetails = ({navigation, route}) => {
               }}>
               <TextInput
                 style={{fontSize: 18, color: '#000000', paddingLeft: 15}}
-                value={formatDateFromISOString(birthDate)}
+                value={dayjs(birthDate).format('DD/MM/YYYY')}
                 placeholder="DD/MM/YYYY"
                 editable={false}
               />

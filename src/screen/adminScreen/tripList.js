@@ -20,7 +20,7 @@ dayjs.extend(utc);
 dayjs.locale('vi');
 const TripList = ({navigation}) => {
   const {route} = useSelector(state => state.route);
-  const [date, setDate] = useState(dayjs().utc().startOf('day'));
+  const [date, setDate] = useState(dayjs().startOf('day'));
   const [trips, setTrips] = useState([]);
   const [seat, setSeat] = useState({});
 
@@ -37,9 +37,15 @@ const TripList = ({navigation}) => {
     useCallback(() => {
       getDataTrip();
       getDataSeat();
-      console.log('trip:', trips, 'seat \n', seat);
     }, [date]),
   );
+
+  console.log(seat);
+  console.log(
+    '----------------------------------------------------------------',
+  );
+
+  console.log(trips);
 
   return (
     <View style={styles.tripContainer}>

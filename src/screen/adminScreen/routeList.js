@@ -14,13 +14,14 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
-import {Sreach} from '../../components/search';
+import {Search} from '../../components/search';
 import {getAllrouteData} from '../../redux/actions/routeAction';
 import {getAllbusData} from '../../redux/actions/busAction';
 import {selectRoute} from '../../redux/actions/routeAction';
 import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
 import ItemRoute from '../../components/itemRoute';
+import {customStyles} from '../../constants/customStyles';
 
 const RouteList = ({navigation}) => {
   const ACTIVE = 'ACTIVE';
@@ -42,7 +43,7 @@ const RouteList = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       const parent = navigation.getParent();
-      parent?.setOptions({tabBarStyle: {display: undefined}});
+      parent?.setOptions({tabBarStyle: customStyles.bottomTab});
     }, [navigation]),
   );
 
@@ -84,6 +85,7 @@ const RouteList = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <MyStatusBar />
+
       <View style={{flex: 1}}>
         {/* Phần tiêu đề header */}
         <View
@@ -158,7 +160,7 @@ const RouteList = ({navigation}) => {
           </View>
 
           {/* Tìm từ khóa */}
-          <Sreach onChangeText={setSearchUser} value={searchUsers} />
+          <Search onChangeText={setSearchUser} value={searchUsers} />
 
           {/* danh sách */}
           <FlatList
@@ -173,6 +175,7 @@ const RouteList = ({navigation}) => {
               />
             )}
             keyExtractor={item => item._id}
+            ListFooterComponent={<View style={{height: 75}} />}
           />
         </View>
       </View>

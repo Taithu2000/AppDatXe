@@ -1,8 +1,9 @@
 import {
+  GET_USER,
   GET_USER_DATA,
-  USER_REGISTER_SUCCESS,
-  USER_REGISTER_FAIL,
-  GET_USERS_DATA,
+  USER_REGISTER,
+  GET_USERS,
+  UPDATE_USER,
 } from '../actions/userAction';
 
 const initialState = {
@@ -19,31 +20,43 @@ const initialState = {
     createAt: '',
     _id: '',
   },
-  registrationError: null,
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_USER:
+      return {
+        ...state,
+        user: action.payload,
+      };
     case GET_USER_DATA:
       return {
         ...state,
         user: action.payload,
       };
-    case GET_USERS_DATA:
+    case GET_USERS:
       return {
         ...state,
         users: action.payload,
       };
-    case USER_REGISTER_SUCCESS:
+    case USER_REGISTER:
       return {
         ...state,
         user: action.payload,
-        registrationError: null,
       };
-    case USER_REGISTER_FAIL:
+    case UPDATE_USER:
+      const updateUser = state.users.map(user => {
+        if (user._id === action.payload._id) {
+          return action.payload;
+        } else {
+          return user;
+        }
+      });
+
       return {
         ...state,
-        registrationError: action.payload,
+        users: updateUser,
+        user: action.payload,
       };
     default:
       return state;

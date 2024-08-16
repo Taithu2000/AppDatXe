@@ -11,6 +11,9 @@ export const DELETE_ROUTE = 'DELETE_ROUTE';
 
 import axios from 'axios';
 
+
+
+
 // lấy tất cả tuyến đường
 export const getAllrouteData = () => async dispatch => {
   try {
@@ -51,7 +54,7 @@ export const selectRoute = routeData => dispatch => {
     });
     return true;
   } catch (error) {
-    throw new Error('Không thể gọi data', error);
+    throw new Error('Không có route', error);
   }
 };
 

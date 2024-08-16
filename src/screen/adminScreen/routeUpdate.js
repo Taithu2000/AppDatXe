@@ -39,17 +39,13 @@ const RouteUpdate = ({validModal, setValidModal}) => {
   const [dataProvince, setDataProvince] = useState([]);
   const [newBuses, setNewBuses] = useState([]);
 
-  const [date, setDate] = useState(new Date());
-  const [yesterday, setYesterday] = useState(
-    new Date().setDate(new Date().getDate() - 1),
-  );
-
+  const date = dayjs().startOf('day');
+  
   const [bus_id, setBus_id] = useState(route.bus_id);
   const [isFocusPlate, setIsFocusPlate] = useState(false);
-
   const [end_date, setEnd_date] = useState(route.end_date);
   const [isModalend_date, setIsModalend_date] = useState(false);
-  const [select_end_date, setSelect_end_date] = useState(new Date());
+  const [select_end_date, setSelect_end_date] = useState(dayjs());
 
   const [start_point, setStart_point] = useState(route.start_point);
   const [isFocusStartP, setIsFocusStartP] = useState(false);
@@ -72,7 +68,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
   const updateRoute = async () => {
     const data = {
       bus_id,
-      end_date: dayjs(end_date).format('YYYY-MM-DD'),
+      end_date,
       start_point,
       end_point,
       departure_time,
@@ -134,20 +130,6 @@ const RouteUpdate = ({validModal, setValidModal}) => {
       }
     }
     setDataTotal_time(times);
-  }, []);
-
-  // so sánh ngày bắt đầu với ngày hiện tại
-  const compareDate = () => {
-    return (
-      new Date(dayjs(route.start_date).format('YYYY-MM-DD')).getTime() >=
-      new Date(dayjs(date).format('YYYY-MM-DD')).getTime()
-    );
-  };
-
-  useEffect(() => {
-    if (compareDate()) {
-      setSelect_end_date(route.start_date);
-    }
   }, []);
 
   return (
@@ -235,7 +217,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
 
             <MyCaledarFull
               visible={isModalend_date}
-              minDate={compareDate() ? route.start_date : yesterday}
+              minDate={date}
               maxDate={route.end_date}
               date={select_end_date}
               onChange={params => {
@@ -250,7 +232,6 @@ const RouteUpdate = ({validModal, setValidModal}) => {
                 setEnd_date(select_end_date);
               }}
             />
-
             {/*------------------------------------------- Cập nhật nơi bắt đầu----------------------------------------- */}
 
             <View style={styles.containerDrop}>
@@ -371,7 +352,6 @@ const RouteUpdate = ({validModal, setValidModal}) => {
               </View>
             </View>
 
-
             <MyPickerHours
               visible={isTotal_time}
               selectedIndex={selectedIndex}
@@ -385,100 +365,6 @@ const RouteUpdate = ({validModal, setValidModal}) => {
                 setIsTotal_time(false);
               }}
             />
-{/* 
-            <Modal visible={isTotal_time} transparent={true}>
-              <View style={styles.modalCaledar}>
-                <View
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    width: '60%',
-                    height: '50%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 30,
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: myColor.headerColor,
-                      width: '100%',
-                      height: 50,
-                      position: 'absolute',
-                      top: 0,
-                      borderTopRightRadius: 30,
-                      borderTopLeftRadius: 30,
-                    }}>
-                    <Text
-                      style={{
-                        alignSelf: 'center',
-                        color: '#FFFFFF',
-                        fontSize: 18,
-                        marginTop: 10,
-                      }}>
-                      Chọn giờ di chuyển
-                    </Text>
-                  </View>
-
-                  <WheelPicker
-                    selectedIndex={selectedIndex}
-                    itemStyle
-                    itemTextStyle={{color: 'black', fontSize: 20}}
-                    containerStyle={{
-                      width: 100,
-                      fontsize: 20,
-                    }}
-                    selectedIndicatorStyle={{
-                      borderTopWidth: 1,
-                      borderBottomWidth: 1,
-                      width: 100,
-                      fontsize: 20,
-                    }}
-                    visibleRest={1}
-                    options={dataTotal_time}
-                    onChange={index => setSelectedIndex(index)}
-                  />
-
-                  <View
-                    style={{
-                      width: '100%',
-                      height: 50,
-                      position: 'absolute',
-                      bottom: 0,
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                    }}>
-                    <TouchableOpacity
-                      style={styles.btnCalendar}
-                      onPress={() => {
-                        setIsTotal_time(false);
-                      }}>
-                      <Text
-                        style={{
-                          alignSelf: 'center',
-                          color: '#FFFFFF',
-                          fontSize: 18,
-                        }}>
-                        Hủy
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.btnCalendar}
-                      onPress={() => {
-                        setTotal_time(dataTotal_time[selectedIndex]);
-                        setIsTotal_time(false);
-                      }}>
-                      <Text
-                        style={{
-                          alignSelf: 'center',
-                          color: '#FFFFFF',
-                          fontSize: 18,
-                        }}>
-                        Chọn
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal> */}
 
             {/*------------------------------- Button Cập nhật tuyến đường------------------------------- */}
 

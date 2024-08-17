@@ -21,7 +21,7 @@ import {addRouteData} from '../../redux/actions/routeAction';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
 import dayjs from 'dayjs';
-import MyCaledarFull from '../../components/myCaledarFull';
+import MyCalendarFull from '../../components/myCalendarFull';
 import MyDropdown from '../../components/myDropdown';
 import MyPickerHours from '../../components/MyPickerHours';
 
@@ -330,7 +330,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
               </Text>
             </View>
 
-            <MyCaledarFull
+            <MyCalendarFull
               visible={isModalstart_date}
               minDate={date}
               maxDate={end_date ? end_date : new Date('2050-12-31')}
@@ -378,7 +378,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
               </Text>
             </View>
 
-            <MyCaledarFull
+            <MyCalendarFull
               visible={isModalend_date}
               minDate={start_date ? start_date : date}
               date={select_end_date}

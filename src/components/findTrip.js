@@ -1,44 +1,30 @@
 import React, {Component, useState, useEffect} from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
-import {customStyles} from '../constants/customStyles';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColor} from '../constants/myColor';
-import {MyStatusBar} from '../../components/myStatusBar';
-import {useSelector} from 'react-redux';
 import {MyButton} from '../components/myButton';
 import SelectProvince from '../screen/customerScreen/selectProvince';
-import MyCaledarFull from './myCaledarFull';
+import MyCalendarFull from './myCalendarFull';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 const maxDate = dayjs().add(30, 'day');
 
-const FindTrip = () => {
-  const [startLocation, setStartLocation] = useState('Đắk Lắk');
-  const [endLocation, setEndLocation] = useState('Hồ Chí Minh');
-
+const FindTrip = ({
+  startLocation,
+  setStartLocation,
+  endLocation,
+  setEndLocation,
+  date,
+  setDate,
+  onPress,
+}) => {
   const [oPenModalStart, setOPenModalStart] = useState(false);
   const [oPenModalEnd, setOPenModalEnd] = useState(false);
   const [oPenCalendar, setOPenCalendar] = useState(false);
-  const [date, setDate] = useState(dayjs());
   const [selectDate, setSelectDate] = useState(new Date());
-  // console.log(selectDate);
-  // console.log(new Date("2024-08-15T17:00:00.000Z").getDate());
+
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-   console.log(date);
-   
+
   return (
     <View style={styles.container}>
       <View style={styles.viewLocation}>
@@ -107,7 +93,9 @@ const FindTrip = () => {
       <View style={[styles.viewLocation, {height: 65, marginTop: 30}]}>
         <View style={styles.viewDate}>
           <Text>Ngày khởi hành</Text>
-          <Text style={styles.textLocation}>Thứ năm,15/08/2024</Text>
+          <Text style={styles.textLocation}>
+            {date.format('dddd, DD/MM/YYYY')}
+          </Text>
         </View>
         <TouchableOpacity
           style={styles.btnReverse}
@@ -121,25 +109,25 @@ const FindTrip = () => {
         </TouchableOpacity>
       </View>
 
-      <MyCaledarFull
+      <MyCalendarFull
         visible={oPenCalendar}
-        minDate={dayjs().subtract(1, 'day')}
+        minDate={dayjs().startOf('day')}
         maxDate={maxDate}
-        date={date}
+        date={selectDate}
         onChange={params => {
-          setDate(params.date);
+          setSelectDate(params.date);
         }}
         onPressbtnLater={() => {
           setOPenCalendar(false);
         }}
         onPressbtnSelect={() => {
-          setSelectDate(date);
+          setDate(selectDate);
           setOPenCalendar(false);
         }}
       />
 
       <View style={{width: '90%', marginTop: 30}}>
-        <MyButton nameBtn={'Tìm chuyến đi'} />
+        <MyButton onPress={onPress} nameBtn={'Tìm chuyến đi'} />
       </View>
     </View>
   );
@@ -158,7 +146,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    elevation: 5,
+    elevation: 10,
   },
   iconLocation: {
     alignItems: 'center',

@@ -5,7 +5,6 @@ import {calculateEndTime} from '../constants/fomatHH-mm';
 import {useSelector} from 'react-redux';
 const ItemTrip = ({item, seat, onPress}) => {
   const {buses} = useSelector(state => state.bus);
-  const {route} = useSelector(state => state.route);
 
   // lấy tên xe thông qua  route_id
   const NameByBusId = (busId, buses) => {
@@ -17,14 +16,15 @@ const ItemTrip = ({item, seat, onPress}) => {
     <TouchableOpacity style={styles.tripContainer} onPress={onPress}>
       <View style={styles.itemContainer}>
         <View style={styles.hederItem}>
-          <Text style={styles.nameBus}>{`${NameByBusId(route.bus_id, buses)} 
-          ${seat ? seat.total_seats : ''} chỗ`}</Text>
+          <Text style={styles.nameBus}>{`${NameByBusId(item.bus_id, buses)} ${
+            seat ? seat.total_seats : ''
+          } chỗ`}</Text>
           <Text style={styles.emptySeat}>
             {seat
               ? seat.available_seats == 0
                 ? 'Hết chỗ'
                 : `Còn ${seat.available_seats} chỗ trống`
-              : ''}
+              : 'không chỗ'}
           </Text>
         </View>
         <View style={styles.timeItem}>
@@ -64,7 +64,7 @@ const ItemTrip = ({item, seat, onPress}) => {
           style={{
             width: '100%',
             alignItems: 'center',
-            height: 50,
+            height: 40,
             marginTop: 15,
           }}>
           <View style={styles.semicircleLeft}></View>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   footerItem: {
     width: '90%',
     borderTopWidth: 1,
-    height: 45,
+    height: 40,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',

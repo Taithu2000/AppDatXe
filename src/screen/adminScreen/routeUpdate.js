@@ -23,7 +23,7 @@ import {myColor} from '../../constants/myColor';
 import {MyButton} from '../../components/myButton';
 import {updateRouteData} from '../../redux/actions/routeAction';
 import {getSeatAPI, deleteSeatByDates} from '../../api/seat';
-import MyCaledarFull from '../../components/myCaledarFull';
+import MyCalendarFull from '../../components/myCalendarFull';
 import MyDropdown from '../../components/myDropdown';
 import MyPickerHours from '../../components/MyPickerHours';
 import axios from 'axios';
@@ -40,7 +40,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
   const [newBuses, setNewBuses] = useState([]);
 
   const date = dayjs().startOf('day');
-  
+
   const [bus_id, setBus_id] = useState(route.bus_id);
   const [isFocusPlate, setIsFocusPlate] = useState(false);
   const [end_date, setEnd_date] = useState(route.end_date);
@@ -215,7 +215,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
               </View>
             </View>
 
-            <MyCaledarFull
+            <MyCalendarFull
               visible={isModalend_date}
               minDate={date}
               maxDate={route.end_date}

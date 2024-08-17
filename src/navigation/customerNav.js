@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {Image, Text, StyleSheet} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeCustomer from '../screen/customerScreen/homeCustomer';
+import TripList_Cus from '../screen/customerScreen/tripList_Cus';
 
-import TripAdd from '../screen/adminScreen/tripAdd';
-import TripDetails from '../screen/adminScreen/tripDetails';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
 
@@ -23,8 +22,8 @@ const CustomerNav = () => {
         tabBarStyle: customStyles.bottomTab,
       }}>
       <Tab.Screen
-        name="HomeCustomer"
-        component={HomeCustomer}
+        name="HomeNav"
+        component={HomeNav}
         options={{
           tabBarLabel: ({focused}) => (
             <Text
@@ -50,6 +49,18 @@ const CustomerNav = () => {
 
 export default CustomerNav;
 
+export const HomeNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="HomeCustomer"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
+      <Stack.Screen name="TripList_Cus" component={TripList_Cus} />
+    </Stack.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
   tabBarLabel: {

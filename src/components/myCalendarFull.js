@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 dayjs.extend(utc);
 dayjs.locale('vi');
-const MyCaledarFull = ({
+const MyCalendarFull = ({
   visible,
   minDate,
   maxDate,
@@ -18,8 +18,8 @@ const MyCaledarFull = ({
 }) => {
   return (
     <Modal visible={visible} transparent={true}>
-      <View style={styles.modalCaledar}>
-        <View style={styles.viewCaledar}>
+      <View style={styles.modalCalendar}>
+        <View style={styles.viewCalendar}>
           <DateTimePicker
             mode="single"
             locale={'vi'}
@@ -69,13 +69,13 @@ const MyCaledarFull = ({
 };
 
 const styles = StyleSheet.create({
-  modalCaledar: {
+  modalCalendar: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  viewCaledar: {
+  viewCalendar: {
     width: '90%',
     backgroundColor: '#FFF',
     borderRadius: 20,
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyCaledarFull;
+export default MyCalendarFull;

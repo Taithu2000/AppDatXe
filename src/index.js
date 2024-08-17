@@ -16,7 +16,7 @@ const RootComponent = () => {
     <Provider store={store}>
       <NavigationContainer>
         <RootStack.Navigator
-          initialRouteName="AdminNav"
+          initialRouteName="CustomerNav"
           screenOptions={{headerShown: false}}>
           <RootStack.Screen name="LoginNav" component={LoginNav} />
           <RootStack.Screen name="CustomerNav" component={CustomerNav} />

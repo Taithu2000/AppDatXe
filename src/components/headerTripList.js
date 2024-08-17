@@ -1,13 +1,14 @@
 import React, {Component, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {myColor} from '../constants/myColor';
-import MyCaledarFull from './myCaledarFull';
+import MyCalendarFull from './myCalendarFull';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
+import {max} from 'react-native-reanimated';
 dayjs.locale('Vi');
 
-const HeaderTripList = ({date, setDate, onPress}) => {
+const HeaderTripList = ({date, setDate, minDate, maxDate, onPress}) => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -32,8 +33,10 @@ const HeaderTripList = ({date, setDate, onPress}) => {
       </TouchableOpacity>
 
       {/* hiển thị lịch */}
-      <MyCaledarFull
+      <MyCalendarFull
         visible={isVisibleModal}
+        minDate={minDate}
+        maxDate={maxDate}
         date={selectedDate}
         onChange={params => {
           setSelectedDate(params.date);

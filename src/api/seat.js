@@ -4,6 +4,16 @@ const IP = 'http://10.0.2.2:3306';
 
 import axios from 'axios';
 
+// lấy thông tin của các seat qua ngày
+export const getSeatByDate = async date => {
+  try {
+    const response = await axios.get(`${IP}/seat_date/${date}`);
+    return response.data;
+  } catch (e) {
+    throw new Error('Lỗi lấy dữ liệu: ', e);
+  }
+};
+
 // lấy thông tin của seat qua route_id
 export const getSeatAPI = async route_id => {
   try {

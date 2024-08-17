@@ -1,26 +1,33 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {
   SafeAreaView,
   View,
   Text,
   Image,
-  TouchableOpacity,
   StyleSheet,
-  StatusBar,
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {customStyles} from '../constants/customStyles';
 import {myColor} from '../../constants/myColor';
 import {MyStatusBar} from '../../components/myStatusBar';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import FindTrip from '../../components/findTrip';
-import MyCaledarFull from '../../components/myCaledarFull';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const HomeCustomer = () => {
+import {
+  selectStartPoint,
+  selectEndPoint,
+  selectDateAction,
+} from '../../redux/actions/locationAction';
+import dayjs from 'dayjs';
+const HomeCustomer = ({navigation}) => {
   // const user = useSelector(state => state.user);
   const user = {name: 'Thu'};
+
+  const {startLocation, endLocation, departure_date} = useSelector(
+    state => state.location,
+  );
+
+  console.log(endLocation);
+  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -40,8 +47,19 @@ const HomeCustomer = () => {
           </Text>
         </View>
         <View style={{width: '100%', marginTop: 35}}>
-          <FindTrip />
+          <FindTrip
+            startLocation={startLocation}
+            setStartLocation={item => dispatch(selectStartPoint(item))}
+            endLocation={endLocation}
+            setEndLocation={item => dispatch(selectEndPoint(item))}
+            date={departure_date}
+            setDate={date => dispatch(selectDateAction(date))}
+            onPress={() => {
+              navigation.navigate('TripList_Cus');
+            }}
+          />
         </View>
+        <View style={{height: 75}}></View>
       </ScrollView>
     </SafeAreaView>
   );

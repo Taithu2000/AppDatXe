@@ -14,14 +14,14 @@ import {useFocusEffect} from '@react-navigation/native';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
-import {MyButton} from '../../components/myButton';
-import {ButtonDel} from '../../components/buttonDel';
-import {DeletetDialog} from '../../components/mydialogDelete';
+import {MyButton} from '../../components/button/myButton';
+import {ButtonDel} from '../../components/button/buttonDel';
+import {DeletetDialog} from '../../components/dialog/dialogDelete';
 import {useSelector, useDispatch} from 'react-redux';
 import {formatDateFromISOString} from '../../constants/formatDate';
 import BusUpdate from './busUpdate';
 import {deleteBus} from '../../redux/actions/busAction';
-import ItemRoute from '../../components/itemRoute';
+import ItemRoute from '../../components/itemFlatList/itemRoute';
 import {selectRoute} from '../../redux/actions/routeAction';
 import dayjs from 'dayjs';
 

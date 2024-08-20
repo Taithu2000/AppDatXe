@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {myColor} from '../constants/myColor';
-import {calculateEndTime} from '../constants/fomatHH-mm';
+import {myColor} from '../../constants/myColor';
+import {calculateEndTime} from '../../constants/formatHH-mm';
 import {useSelector} from 'react-redux';
 const ItemTrip = ({item, seat, onPress}) => {
   const {buses} = useSelector(state => state.bus);

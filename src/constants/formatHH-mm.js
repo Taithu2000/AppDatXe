@@ -25,13 +25,13 @@ export const calculateEndTime = (departure_time, total_time) => {
 export const compareHourNow_Departure_time = departure_time => {
   const timeNow = dayjs();
   const nowtHour = timeNow.hour();
-  const nowtMinure = timeNow.minute();
+  const nowtMinute = timeNow.minute();
 
   const start = departure_time.split(':');
   let hours = parseInt(start[0]);
   let minutes = parseInt(start[1]);
 
-  if (hours * 60 + minutes > nowtHour * 60 + nowtMinure + 30) {
+  if (hours * 60 + minutes > nowtHour * 60 + nowtMinute + 30) {
     return true;
   }
   return false;

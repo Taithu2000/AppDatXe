@@ -14,7 +14,7 @@ export const DeletetDialog = ({
       <Dialog.Container visible={visible}>
         <Dialog.Title style={{color: 'red', alignItems: 'center'}}>
           <Image
-            source={require('../assets/images/exclamation.png')}
+            source={require('../../assets/images/exclamation.png')}
             style={{
               width: 20,
               height: 20,

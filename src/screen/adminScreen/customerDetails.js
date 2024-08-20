@@ -14,12 +14,11 @@ import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
 import DatePicker from 'react-native-date-picker';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
-import {DeletetDialog} from '../../components/mydialogDelete';
-
+import {DeletetDialog} from '../../components/dialog/dialogDelete';
 import dayjs from 'dayjs';
 
 // import {IP} from '@env';

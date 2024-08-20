@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {TouchableOpacity, Text} from 'react-native';
-import {myColor} from '../constants/myColor';
-import {fontFamilies} from '../constants/fontFamilies';
-import {fetchDataProvince} from '../api/location';
+import {myColor} from '../../constants/myColor';
+import {fontFamilies} from '../../constants/fontFamilies';
+import {fetchDataProvince} from '../../api/location';
 export const MyButton = ({onPress, nameBtn, isDisabled}) => {
   return (
     <TouchableOpacity

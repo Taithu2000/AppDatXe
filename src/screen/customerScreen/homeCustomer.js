@@ -26,7 +26,6 @@ const HomeCustomer = ({navigation}) => {
     state => state.location,
   );
 
-  console.log(endLocation);
   const dispatch = useDispatch();
 
   return (

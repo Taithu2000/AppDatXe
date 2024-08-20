@@ -12,7 +12,7 @@ import {
 import {useRoute} from '@react-navigation/native';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MyInput} from '../../components/myTextInput';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {registerUser} from '../../redux/actions/userAction';
 import {useDispatch, useSelector} from 'react-redux';

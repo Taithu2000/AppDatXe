@@ -4,7 +4,7 @@ const IP = 'http://10.0.2.2:3306';
 
 import axios from 'axios';
 
-//Lấy danh sách  trip qua ngày , nơi đi nơi đến
+//Lấy danh sách  trip qua ngày , nơi đi - nơi đến
 
 export const getTripByDate_Start_End = async (date, start_point, end_point) => {
   try {

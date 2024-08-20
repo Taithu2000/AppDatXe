@@ -14,22 +14,22 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker';
 import {myColor} from '../../constants/myColor';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
 import MyDropdown from '../../components/myDropdown';
-import MyPickerHours from '../../components/MyPickerHours';
+import MyPickerHours from '../../components/calendar/MyPickerHours';
 import {
   updateTripById,
   updateManyTripByGroupId,
   deleteTripById,
   deleteManyTripByGroupId,
 } from '../../api/tripsAPI';
-import {ButtonDel} from '../../components/buttonDel';
-import DialogSelect from '../../components/dialogSelect';
-import {compareHourNow_Departure_time} from '../../constants/fomatHH-mm';
+import {ButtonDel} from '../../components/button/buttonDel';
+import DialogSelect from '../../components/dialog/dialogSelect';
+import {compareHourNow_Departure_time} from '../../constants/formatHH-mm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);

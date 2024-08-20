@@ -14,16 +14,16 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker';
 import {myColor} from '../../constants/myColor';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {useDispatch, useSelector} from 'react-redux';
 import {addRouteData} from '../../redux/actions/routeAction';
 import {fetchDataProvince} from '../../api/location';
 import {MyStatusBar} from '../../components/myStatusBar';
 import dayjs from 'dayjs';
-import MyCalendarFull from '../../components/myCalendarFull';
+import MyCalendarFull from '../../components/calendar/myCalendarFull';
 import MyDropdown from '../../components/myDropdown';
-import MyPickerHours from '../../components/MyPickerHours';
+import MyPickerHours from '../../components/calendar/MyPickerHours';
 
 const AddRoute = ({navigation, route: myRoute}) => {
   const dispatch = useDispatch();

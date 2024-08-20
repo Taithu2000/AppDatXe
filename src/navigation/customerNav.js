@@ -3,19 +3,20 @@ import {Image, Text, StyleSheet} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeCustomer from '../screen/customerScreen/homeCustomer';
 import TripList_Cus from '../screen/customerScreen/tripList_Cus';
-
+import SelectPickUpAndDropOff from '../screen/customerScreen/slectPickUp_Dropoff';
+import OrderInformation from '../screen/customerScreen/orderInformation';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {exp} from 'react-native-reanimated';
+import SelectSeats from '../screen/customerScreen/selectSeats';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const CustomerNav = () => {
   return (
     <Tab.Navigator
-      initialRouteName="RouteNav"
+      initialRouteName="HomeNav"
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -58,6 +59,12 @@ export const HomeNav = () => {
       }}>
       <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
       <Stack.Screen name="TripList_Cus" component={TripList_Cus} />
+      <Stack.Screen name="SelectSeats" component={SelectSeats} />
+      <Stack.Screen
+        name="SelectPickUpAndDropOff"
+        component={SelectPickUpAndDropOff}
+      />
+      <Stack.Screen name="OrderInformation" component={OrderInformation} />
     </Stack.Navigator>
   );
 };

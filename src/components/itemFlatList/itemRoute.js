@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {myColor} from '../constants/myColor';
+import {myColor} from '../../constants/myColor';
 import {useSelector} from 'react-redux';
-import {calculateEndTime} from '../constants/fomatHH-mm';
+import {calculateEndTime} from '../../constants/formatHH-mm';
 import dayjs from 'dayjs';
 const ItemRoute = ({item, onPress}) => {
   const {buses} = useSelector(state => state.bus);
@@ -25,7 +25,7 @@ const ItemRoute = ({item, onPress}) => {
           <View style={styles.bodyLocation}>
             <View style={styles.viewIconLocation}>
               <Image
-                source={require('../assets/images/dot-circle.png')}
+                source={require('../../assets/images/dot-circle.png')}
                 style={styles.iconLocation}
               />
               <View
@@ -36,7 +36,7 @@ const ItemRoute = ({item, onPress}) => {
                 }}></View>
 
               <Image
-                source={require('../assets/images/marker.png')}
+                source={require('../../assets/images/marker.png')}
                 style={styles.iconLocation}
               />
             </View>
@@ -61,14 +61,14 @@ const ItemRoute = ({item, onPress}) => {
         <View style={styles.footer}>
           <Image
             style={styles.iconLocation}
-            source={require('../assets/images/time-quarter-to.png')}
+            source={require('../../assets/images/time-quarter-to.png')}
           />
           <Text style={styles.textfooter}> ~ {item.total_time} h</Text>
 
           <View style={{width: 30}}></View>
           <Image
             style={styles.iconLocation}
-            source={require('../assets/images/arrows-repeat.png')}
+            source={require('../../assets/images/arrows-repeat.png')}
           />
           <Text style={styles.textfooter}>
             {' '}

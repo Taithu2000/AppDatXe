@@ -16,7 +16,7 @@ import DatePicker from 'react-native-date-picker';
 
 import {Dropdown} from 'react-native-element-dropdown';
 import {myColor} from '../../constants/myColor';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {formatDate} from '../../constants/formatDate';
 import {useSelector, useDispatch} from 'react-redux';
 import {updateBus} from '../../redux/actions/busAction';

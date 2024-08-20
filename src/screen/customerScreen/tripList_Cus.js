@@ -15,8 +15,8 @@ import {
 import {myColor} from '../../constants/myColor';
 import {useSelector, useDispatch} from 'react-redux';
 import FindTrip from '../../components/findTrip';
-import HeaderTripList from '../../components/headerTripList';
-import ItemTrip from '../../components/itemTrip';
+import HeaderTripList from '../../components/header/headerTripList';
+import ItemTrip from '../../components/itemFlatList/itemTrip';
 import {getAllbusData} from '../../redux/actions/busAction';
 import {getTripByDate_Start_End} from '../../api/tripsAPI';
 import {getSeatByDate} from '../../api/seat';
@@ -26,8 +26,9 @@ import {
   selectEndPoint,
   selectDateAction,
 } from '../../redux/actions/locationAction';
+import {compareHourNow_Departure_time} from '../../constants/formatHH-mm';
 
-const TripList_Cus = ({navigation, route}) => {
+const TripList_Cus = ({navigation}) => {
   const {startLocation, endLocation, departure_date} = useSelector(
     state => state.location,
   );
@@ -45,6 +46,23 @@ const TripList_Cus = ({navigation, route}) => {
 
   //---------------------------------------------gọi data---------------------------------------------
 
+  //-----------------------------lọc lấy các trip có thời gian bắt đầu lớn hơn hiện tại 30 phút--------------
+  const findTrip = trips => {
+    if (
+      departure_date.startOf('day').valueOf() ===
+      dayNow.startOf('day').valueOf()
+    ) {
+      const newData = trips.find(trip => {
+        return compareHourNow_Departure_time(trip.pickupTime);
+      });
+
+      return newData ? [newData] : [];
+    } else {
+      return trips;
+    }
+  };
+  //-----------------------------sắp xếp theo thứ tự tăng dần--------------
+
   const sortTrips = data => {
     const sortedTrips = data.sort((a, b) => {
       const timeA = new Date(`2000-01-01T${a.pickupTime}:00Z`).getTime();
@@ -54,6 +72,9 @@ const TripList_Cus = ({navigation, route}) => {
     });
     setTrips(sortedTrips);
   };
+
+  //---------------------------------------------gọi data---------------------------------------------
+
   const getBuses = async () => {
     await dispatch(getAllbusData());
   };
@@ -69,7 +90,8 @@ const TripList_Cus = ({navigation, route}) => {
       startLocation,
       endLocation,
     );
-    sortTrips(response);
+    const data = findTrip(response);
+    sortTrips(data);
   };
 
   useEffect(() => {
@@ -79,7 +101,7 @@ const TripList_Cus = ({navigation, route}) => {
   useEffect(() => {
     getTrip();
     getSeat();
-  }, [departure_date]);
+  }, [departure_date, startLocation, endLocation]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -228,14 +250,21 @@ const TripList_Cus = ({navigation, route}) => {
           <View style={styles.containerList}>
             <FlatList
               data={trips}
-              renderItem={({item}) => (
-                <ItemTrip
-                  item={item}
-                  seat={seats.find(seat => {
-                    return seat._id === item.seat_id;
-                  })}
-                />
-              )}
+              renderItem={({item}) => {
+                const seat = seats.find(seat => {
+                  return seat._id === item.seat_id;
+                });
+
+                return (
+                  <ItemTrip
+                    item={item}
+                    seat={seat}
+                    onPress={() => {
+                      navigation.navigate('SelectSeats', {trip: item, seat});
+                    }}
+                  />
+                );
+              }}
               keyExtractor={item => item._id}
             />
           </View>

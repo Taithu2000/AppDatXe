@@ -1,9 +1,9 @@
 import React, {Component, useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColor} from '../constants/myColor';
-import {MyButton} from '../components/myButton';
+import {MyButton} from './button/myButton';
 import SelectProvince from '../screen/customerScreen/selectProvince';
-import MyCalendarFull from './myCalendarFull';
+import MyCalendarFull from './calendar/MyPickerHours';
 import dayjs from 'dayjs';
 
 const maxDate = dayjs().add(30, 'day');

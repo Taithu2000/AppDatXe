@@ -1,7 +1,7 @@
 import React, {Component, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {myColor} from '../constants/myColor';
-import MyCalendarFull from './myCalendarFull';
+import {myColor} from '../../constants/myColor';
+import MyCalendarFull from '../calendar/myCalendarFull'
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
@@ -27,7 +27,7 @@ const HeaderTripList = ({date, setDate, minDate, maxDate, onPress}) => {
           setIsVisibleModal(true);
         }}>
         <Image
-          source={require('../assets/images/daily-calendar.png')}
+          source={require('../../assets/images/daily-calendar.png')}
           style={styles.image}
         />
       </TouchableOpacity>
@@ -52,7 +52,7 @@ const HeaderTripList = ({date, setDate, minDate, maxDate, onPress}) => {
 
       <TouchableOpacity onPress={handlePrevDay}>
         <Image
-          source={require('../assets/images/angle-double-small-left.png')}
+          source={require('../../assets/images/angle-double-small-left.png')}
           style={styles.image}
         />
       </TouchableOpacity>
@@ -61,14 +61,14 @@ const HeaderTripList = ({date, setDate, minDate, maxDate, onPress}) => {
 
       <TouchableOpacity onPress={handleNextDay}>
         <Image
-          source={require('../assets/images/angle-double-small-right.png')}
+          source={require('../../assets/images/angle-double-small-right.png')}
           style={styles.image}
         />
       </TouchableOpacity>
 
       <TouchableOpacity onPress={onPress}>
         <Image
-          source={require('../assets/images/multiple.png')}
+          source={require('../../assets/images/multiple.png')}
           style={styles.image}
         />
       </TouchableOpacity>

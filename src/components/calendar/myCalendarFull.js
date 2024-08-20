@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import DateTimePicker from 'react-native-ui-datepicker';
-import {myColor} from '../constants/myColor';
+import {myColor} from '../../constants/myColor';
 import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';

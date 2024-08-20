@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import WheelPicker from 'react-native-wheely';
-import {myColor} from '../constants/myColor';
+import {myColor} from '../../constants/myColor';
 
 const MyPickerHours = ({
     visible,

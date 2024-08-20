@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import {MyInput} from '../../components/myTextInput';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {getUserByPhone} from '../../redux/actions/userAction';
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,10 +26,7 @@ const PhoneNumber = ({navigation}) => {
 
   const verifyPhoneNumber = phone => {
     if (!phone) return true;
-    let regex = RegExp(
-      /(^(0|84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$)/,
-    );
-
+    let regex = RegExp(/(^(0|84)[1-9]{1}[0-9]{8}$)/);
     return regex.test(phone);
   };
 

@@ -20,7 +20,7 @@ import {getAllbusData} from '../../redux/actions/busAction';
 import {selectRoute} from '../../redux/actions/routeAction';
 import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
-import ItemRoute from '../../components/itemRoute';
+import ItemRoute from '../../components/itemFlatList/itemRoute';
 import {customStyles} from '../../constants/customStyles';
 
 const RouteList = ({navigation}) => {

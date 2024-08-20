@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MyInput} from '../../components/myTextInput';
-import {MyButton} from '../../components/myButton';
+import {MyButton} from '../../components/button/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {useSelector} from 'react-redux';
 

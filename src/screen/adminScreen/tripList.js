@@ -8,8 +8,8 @@ import {
   FlatList,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import ItemTrip from '../../components/itemTrip';
-import HeaderTripList from '../../components/headerTripList';
+import ItemTrip from '../../components/itemFlatList/itemTrip';
+import HeaderTripList from '../../components/header/headerTripList';
 import {useSelector} from 'react-redux';
 import {getTripByRouteIdAndDate} from '../../api/tripsAPI';
 import {getSeatByRouteIdandDate} from '../../api/seat';

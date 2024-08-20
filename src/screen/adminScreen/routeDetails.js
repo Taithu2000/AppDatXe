@@ -12,10 +12,10 @@ import {
 import {MyStatusBar} from '../../components/myStatusBar';
 import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
-import {MyButton} from '../../components/myButton';
-import {ButtonDel} from '../../components/buttonDel';
+import {MyButton} from '../../components/button/myButton';
+import {ButtonDel} from '../../components/button/buttonDel';
 import axios from 'axios';
-import {DeletetDialog} from '../../components/mydialogDelete';
+import {DeletetDialog} from '../../components/dialog/dialogDelete';
 import {useSelector, useDispatch} from 'react-redux';
 import {deleteRouteData} from '../../redux/actions/routeAction';
 import {deleteSeatByDates} from '../../api/seat';

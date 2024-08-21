@@ -1,17 +1,21 @@
 import React, {Component} from 'react';
-import {Image, Text, StyleSheet} from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Image, Text, StyleSheet, Easing} from 'react-native';
+
 import HomeCustomer from '../screen/customerScreen/homeCustomer';
 import TripList_Cus from '../screen/customerScreen/tripList_Cus';
 import SelectPickUpAndDropOff from '../screen/customerScreen/slectPickUp_Dropoff';
+import PaymentScreen from '../screen/customerScreen/payMent';
 import OrderInformation from '../screen/customerScreen/orderInformation';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
 
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SelectSeats from '../screen/customerScreen/selectSeats';
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const CustomerNav = () => {
   return (
@@ -56,6 +60,19 @@ export const HomeNav = () => {
       initialRouteName="HomeCustomer"
       screenOptions={{
         headerShown: false,
+
+        cardStyleInterpolator: ({current, layouts}) => ({
+          cardStyle: {
+            transform: [
+              {
+                translateX: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.width, 0],
+                }),
+              },
+            ],
+          },
+        }),
       }}>
       <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
       <Stack.Screen name="TripList_Cus" component={TripList_Cus} />
@@ -65,6 +82,7 @@ export const HomeNav = () => {
         component={SelectPickUpAndDropOff}
       />
       <Stack.Screen name="OrderInformation" component={OrderInformation} />
+      <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
     </Stack.Navigator>
   );
 };

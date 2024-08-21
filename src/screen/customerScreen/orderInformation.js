@@ -28,7 +28,7 @@ const OrderInformation = ({navigation, route}) => {
 
   const [validName, setValidName] = useState(true);
   const [validPhone, setValidPhone] = useState(true);
-console.log(selectPickup)
+  console.log(selectPickup);
   //check số điện thoại
   const verifyPhoneNumber = phone => {
     if (!phone) return true;
@@ -166,7 +166,16 @@ console.log(selectPickup)
             nameBtn={'Tiếp tục'}
             onPress={() => {
               if (verifyAll()) {
-                console.log('a');
+                navigation.navigate('PaymentScreen', {
+                  trip,
+                  seat,
+                  selectSeat,
+                  selectPickup,
+                  selectDropOff,
+                  name,
+                  phone,
+                  node,
+                });
               }
             }}
           />

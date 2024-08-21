@@ -35,7 +35,7 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   // DDDDDDd
- 
+
   return <RootComponent />;
 };
 

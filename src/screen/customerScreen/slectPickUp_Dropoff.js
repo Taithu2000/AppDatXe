@@ -13,11 +13,11 @@ import {
   FlatList,
 } from 'react-native';
 import {myColor} from '../../constants/myColor';
-import {fontFamilies} from '../../constants/fontFamilies';
 import {IconSteps} from '../../components/iconSteps';
 import {getTripByRouteIdAndDate} from '../../api/tripsAPI';
 import {calculateEndTime} from '../../constants/formatHH-mm';
 import {MyButton} from '../../components/button/myButton';
+import HeaderScreen from '../../components/header/headerScreen';
 
 const SelectPickUpAndDropOff = ({navigation, route}) => {
   const {trip, seat, selectSeat} = route.params;
@@ -34,7 +34,7 @@ const SelectPickUpAndDropOff = ({navigation, route}) => {
   useEffect(() => {
     const parent = navigation.getParent();
     parent?.setOptions({tabBarStyle: {display: 'none'}});
-  }, [trip]);
+  }, []);
   //   --------------------------------------------lấy danh sách trips để hiển thị điểm đón- trả------------------------------------------------
 
   useEffect(() => {
@@ -114,40 +114,7 @@ const SelectPickUpAndDropOff = ({navigation, route}) => {
         barStyle="light-content"
         translucent={true}
       />
-
-      <View
-        style={{
-          paddingTop: StatusBar.currentHeight,
-          height: 75,
-          backgroundColor: myColor.headerColor,
-        }}>
-        <TouchableOpacity
-          style={{
-            width: 40,
-            height: 40,
-            position: 'absolute',
-            paddingTop: StatusBar.currentHeight + 10,
-            marginLeft: 10,
-          }}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image
-            source={require('../../assets/images/arrow-small-left.png')}
-            style={{width: 40, height: 40, tintColor: '#FFFFFF'}}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: '#FFFFFF',
-            alignSelf: 'center',
-            paddingTop: 15,
-            fontSize: 20,
-            fontFamily: fontFamilies.Medium,
-          }}>
-          Chọn điểm đón và trả
-        </Text>
-      </View>
+      <HeaderScreen navigation={navigation} header={'Chọn điểm đón và trả'} />
 
       <View style={{flex: 1}}>
         <IconSteps iconLocation={true} />

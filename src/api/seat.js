@@ -41,6 +41,15 @@ export const deleteSeatByDates = async (route_id, date) => {
       `${IP}/seat/delete/${route_id}/${date}`,
     );
   } catch (e) {
-    throw new Error('Lỗi lấy dữ liệu: ', e);
+    throw new Error('Lỗi xóa liệu: ', e);
+  }
+};
+
+// Cập nhật lại ghế trống hoặc đã bán
+export const updateSeatNumbers = async (_id, seatNumbers) => {
+  try {
+    const response = await axios.patch(`${IP}/seat/update/${_id}`, seatNumbers);
+  } catch (e) {
+    throw new Error('Lỗi cập nhật dữ liệu: ', e);
   }
 };

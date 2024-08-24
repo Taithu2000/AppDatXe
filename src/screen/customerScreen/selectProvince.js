@@ -1,22 +1,14 @@
 import React, {Component, useState, useEffect} from 'react';
 import {
-  SafeAreaView,
   View,
   Text,
   Image,
   TouchableOpacity,
   StyleSheet,
-  StatusBar,
-  ScrollView,
-  Dimensions,
-  ImageBackground,
   Modal,
   FlatList,
 } from 'react-native';
-import {customStyles} from '../constants/customStyles';
 import {myColor} from '../../constants/myColor';
-import {MyStatusBar} from '../../components/myStatusBar';
-import {useSelector} from 'react-redux';
 import {fetchDataProvince} from '../../api/location';
 import {Search} from '../../components/search';
 

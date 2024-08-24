@@ -13,8 +13,8 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {MyInput} from '../../components/myTextInput';
 import {MyButton} from '../../components/button/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
-import {useSelector} from 'react-redux';
-
+import {useSelector, useDispatch} from 'react-redux';
+import {setRoles} from '../../redux/actions/authorization';
 const windowHeight = Dimensions.get('window').height;
 
 const PasswordInput = ({navigation}) => {
@@ -23,6 +23,7 @@ const PasswordInput = ({navigation}) => {
   const [isValid, setIsValid] = useState(true);
 
   const {user} = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
   const checkPassword = () => {
     console.log(password, user.password);
@@ -148,8 +149,10 @@ const PasswordInput = ({navigation}) => {
                 if (checkPassword()) {
                   if (user.roles === 'admin') {
                     navigation.replace('AdminNav');
+                    dispatch(setRoles('admin'));
                   } else {
-                    navigation.replace('HomeUser');
+                    navigation.replace('CustomerNav');
+                    dispatch(setRoles('user'));
                   }
                 }
               }}

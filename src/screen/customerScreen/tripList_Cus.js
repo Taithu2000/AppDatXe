@@ -44,6 +44,10 @@ const TripList_Cus = ({navigation}) => {
   const [oPenFinTrip, setOPenFinTrip] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const parent = navigation.getParent();
+    parent?.setOptions({tabBarStyle: {display: 'none'}});
+  }, []);
   //---------------------------------------------gọi data---------------------------------------------
 
   //-----------------------------lọc lấy các trip có thời gian bắt đầu lớn hơn hiện tại 30 phút--------------

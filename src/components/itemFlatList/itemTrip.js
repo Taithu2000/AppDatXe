@@ -13,7 +13,7 @@ const ItemTrip = ({item, seat, onPress}) => {
   };
 
   return (
-    <TouchableOpacity style={styles.tripContainer} onPress={onPress}>
+    <TouchableOpacity style={styles.tripContainerItem} onPress={onPress}>
       <View style={styles.itemContainer}>
         <View style={styles.hederItem}>
           <Text style={styles.nameBus}>{`${NameByBusId(item.bus_id, buses)} ${
@@ -88,8 +88,12 @@ const ItemTrip = ({item, seat, onPress}) => {
   );
 };
 const styles = StyleSheet.create({
+  tripContainerItem: {
+    width: '100%',
+  },
+
   itemContainer: {
-    width: '90%',
+    width: '95%',
     margin: 10,
     alignSelf: 'center',
     alignItems: 'center',
@@ -115,6 +119,8 @@ const styles = StyleSheet.create({
   emptySeat: {
     fontSize: 18,
     color: '#002aff',
+    width: '55%',
+    textAlign: 'right',
   },
   timeItem: {
     height: 50,

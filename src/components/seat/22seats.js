@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColor} from '../../constants/myColor';
 import DialogNotify from '../../components/dialog/dialogNotify';
 
-const SeatSelection22 = ({seat,selectSeat,setSelectSeat}) => {
+const SeatSelection22 = ({seat, selectSeat, setSelectSeat}) => {
   const [visibleModal, setVisibleModal] = useState(false);
 
   const checkSeat = seat => {
@@ -40,7 +40,15 @@ const SeatSelection22 = ({seat,selectSeat,setSelectSeat}) => {
   return (
     <View style={styles.container}>
       {/*----------------- hộp thoại thông báo {/*-----------------*/}
-      <DialogNotify visible={visibleModal} setVisible={setVisibleModal} />
+      <DialogNotify
+        visible={visibleModal}
+        source={require('../../assets/images/siren.png')}
+        title={'Lỗi'}
+        content={'Só lượng ghế bạn chọn đã vượt quá số lượng cho phép'}
+        onPress={() => {
+          setVisibleModal(false);
+        }}
+      />
 
       <View>
         <Text style={styles.header}>Tầng 1</Text>

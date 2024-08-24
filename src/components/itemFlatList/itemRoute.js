@@ -13,8 +13,6 @@ const ItemRoute = ({item, onPress}) => {
     return bus ? bus.license_plate : '';
   };
 
- 
-
   return (
     <View style={styles.containerItem}>
       <TouchableOpacity onPress={onPress} style={styles.viewTouch}>
@@ -94,6 +92,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: '#C0C0C0',
     backgroundColor: '#FFFFEE',
+    elevation: 5,
   },
 
   textPlate: {

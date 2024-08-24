@@ -6,13 +6,12 @@ const IP = 'http://10.0.2.2:3306';
 export const GET_ROUTES_DATA = 'GET_ROUTES_DATA';
 export const ADD_ROUTE_DATA = 'ADD_ROUTE_DATA';
 export const SELECT_ROUTE = 'SELECT_ROUTE';
+export const SELECT_ROUTE_BY_ID = 'SELECT_ROUTE_BY_ID';
+
 export const UPDATE_ROUTE = 'UPDATE_ROUTE';
 export const DELETE_ROUTE = 'DELETE_ROUTE';
 
 import axios from 'axios';
-
-
-
 
 // lấy tất cả tuyến đường
 export const getAllrouteData = () => async dispatch => {
@@ -51,6 +50,22 @@ export const selectRoute = routeData => dispatch => {
     dispatch({
       type: SELECT_ROUTE,
       payload: routeData,
+    });
+    return true;
+  } catch (error) {
+    throw new Error('Không có route', error);
+  }
+};
+
+//lấy 1 tuyến đường qua ID
+
+export const selectRouteById = _id => async dispatch => {
+  try {
+    const response = await axios.get(`${IP}/route/${_id}`);
+
+    dispatch({
+      type: SELECT_ROUTE_BY_ID,
+      payload: response.data,
     });
     return true;
   } catch (error) {

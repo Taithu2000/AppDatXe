@@ -4,31 +4,25 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   StyleSheet,
   StatusBar,
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import {myColor} from '../../constants/myColor';
-import {fontFamilies} from '../../constants/fontFamilies';
 import {IconSteps} from '../../components/iconSteps';
 import {MyButton} from '../../components/button/myButton';
-
-const user = {
-  name: 'Thu',
-  phoneNumber: '0456681747',
-};
+import HeaderScreen from '../../components/header/headerScreen';
+import {useSelector} from 'react-redux';
 
 const OrderInformation = ({navigation, route}) => {
   const {trip, seat, selectSeat, selectPickup, selectDropOff} = route.params;
+  const {user} = useSelector(state => state.user);
   const [name, setName] = useState(user.name);
   const [phone, setPhone] = useState(user.phoneNumber);
-  const [node, setNode] = useState('');
+  const [note, setNote] = useState('');
 
   const [validName, setValidName] = useState(true);
   const [validPhone, setValidPhone] = useState(true);
-  console.log(selectPickup);
   //check số điện thoại
   const verifyPhoneNumber = phone => {
     if (!phone) return true;
@@ -63,40 +57,10 @@ const OrderInformation = ({navigation, route}) => {
         barStyle="light-content"
         translucent={true}
       />
-
-      <View
-        style={{
-          paddingTop: StatusBar.currentHeight,
-          height: 75,
-          backgroundColor: myColor.headerColor,
-        }}>
-        <TouchableOpacity
-          style={{
-            width: 40,
-            height: 40,
-            position: 'absolute',
-            paddingTop: StatusBar.currentHeight + 10,
-            marginLeft: 10,
-          }}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image
-            source={require('../../assets/images/arrow-small-left.png')}
-            style={{width: 40, height: 40, tintColor: '#FFFFFF'}}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: '#FFFFFF',
-            alignSelf: 'center',
-            paddingTop: 15,
-            fontSize: 20,
-            fontFamily: fontFamilies.Medium,
-          }}>
-          Thông tin người đặt chỗ
-        </Text>
-      </View>
+      <HeaderScreen
+        navigation={navigation}
+        header={'Thông tin người đặt chỗ'}
+      />
       <IconSteps iconLocation={true} iconUser={true} />
 
       <KeyboardAvoidingView style={{flex: 1}}>
@@ -154,9 +118,9 @@ const OrderInformation = ({navigation, route}) => {
             <TextInput
               style={[styles.textInput, {}]}
               placeholder="Nhập ghi chú "
-              value={node}
+              value={note}
               onChangeText={text => {
-                setNode(text);
+                setNote(text);
               }}
             />
           </View>
@@ -174,7 +138,7 @@ const OrderInformation = ({navigation, route}) => {
                   selectDropOff,
                   name,
                   phone,
-                  node,
+                  note,
                 });
               }
             }}

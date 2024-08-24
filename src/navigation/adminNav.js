@@ -11,6 +11,7 @@ import AddRoute from '../screen/adminScreen/routeAdd';
 import RouteDetails from '../screen/adminScreen/routeDetails';
 import TripAdd from '../screen/adminScreen/tripAdd';
 import TripDetails from '../screen/adminScreen/tripDetails';
+import TicketDetails from '../screen/customerScreen/ticketDetails';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
 
@@ -147,6 +148,7 @@ export const RouteNav = () => {
       <Stack.Screen name="RouteDetails" component={RouteDetails} />
       <Stack.Screen name="TripAdd" component={TripAdd} />
       <Stack.Screen name="TripDetails" component={TripDetails} />
+      <Stack.Screen name="TicketDetails" component={TicketDetails} />
     </Stack.Navigator>
   );
 };

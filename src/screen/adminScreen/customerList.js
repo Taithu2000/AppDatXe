@@ -19,19 +19,11 @@ import {customStyles} from '../../constants/customStyles';
 
 const Customer = ({navigation}) => {
   const users = useSelector(state => state.user.users);
+
   const dispatch = useDispatch();
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchUsers, setSearchUser] = useState('');
-
-  //--------------------------------------------lấy data danh sách users---------------------------------------------
-
-  const handleUser = async () => {
-    await dispatch(fetchUsersDataSSS());
-  };
-
-  useEffect(() => {
-    handleUser();
-  }, []);
+  const [usersCus, setUserCus] = useState([]);
 
   //---------------------------------------------hiển thị bottom tab---------------------------------------------
   useFocusEffect(
@@ -41,8 +33,29 @@ const Customer = ({navigation}) => {
     }, [navigation]),
   );
 
+  //--------------------------------------------lấy data danh sách users---------------------------------------------
+
+  const getDataUser = async () => {
+    try {
+      await dispatch(fetchUsersDataSSS());
+    } catch (error) {
+      console.error('lỗi khi lấy dữ liệu user:', error);
+    }
+  };
+
+  useEffect(() => {
+    getDataUser();
+  }, []);
+
+  useEffect(() => {
+    const newData = users.filter(user => {
+      return user.roles === 'user';
+    });
+    setUserCus(newData);
+  }, [users]);
+
   const handleSearch = () => {
-    const filtered = users.filter(user => {
+    const filtered = usersCus.filter(user => {
       const nameSearch = user.name
         .toLowerCase()
 
@@ -58,7 +71,7 @@ const Customer = ({navigation}) => {
 
   useEffect(() => {
     handleSearch();
-  }, [searchUsers, users]);
+  }, [searchUsers, usersCus]);
 
   return (
     <SafeAreaView style={{flex: 1}}>

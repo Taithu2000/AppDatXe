@@ -3,36 +3,15 @@ import {
   SafeAreaView,
   View,
   Text,
-  Image,
-  TouchableOpacity,
   StyleSheet,
   StatusBar,
   ScrollView,
-  Dimensions,
-  Modal,
-  FlatList,
 } from 'react-native';
-import {myColor} from '../../constants/myColor';
-import {fontFamilies} from '../../constants/fontFamilies';
 import {IconSteps} from '../../components/iconSteps';
 import SeatSelection22 from '../../components/seat/22seats';
 import SeatSelection40 from '../../components/seat/40seats';
 import {MyButton} from '../../components/button/myButton';
-
-import {useSelector, useDispatch} from 'react-redux';
-import FindTrip from '../../components/findTrip';
-import HeaderTripList from '../../components/header/headerTripList';
-import ItemTrip from '../../components/itemFlatList/itemTrip';
-import {getAllbusData} from '../../redux/actions/busAction';
-import {getTripByDate_Start_End} from '../../api/tripsAPI';
-import {getSeatByDate} from '../../api/seat';
-import dayjs from 'dayjs';
-import {
-  selectStartPoint,
-  selectEndPoint,
-  selectDateAction,
-} from '../../redux/actions/locationAction';
-import {compareHourNow_Departure_time} from '../../constants/formatHH-mm';
+import HeaderScreen from '../../components/header/headerScreen';
 
 const SelectSeats = ({navigation, route}) => {
   const {trip, seat} = route.params;
@@ -54,40 +33,7 @@ const SelectSeats = ({navigation, route}) => {
         translucent={true}
       />
 
-      <View
-        style={{
-          paddingTop: StatusBar.currentHeight,
-          height: 75,
-          backgroundColor: myColor.headerColor,
-        }}>
-        <TouchableOpacity
-          style={{
-            width: 40,
-            height: 40,
-            position: 'absolute',
-            paddingTop: StatusBar.currentHeight + 10,
-            marginLeft: 10,
-          }}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Image
-            source={require('../../assets/images/arrow-small-left.png')}
-            style={{width: 40, height: 40, tintColor: '#FFFFFF'}}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: '#FFFFFF',
-            alignSelf: 'center',
-            paddingTop: 15,
-            fontSize: 20,
-            fontFamily: fontFamilies.Medium,
-          }}>
-          Chọn ghế
-        </Text>
-      </View>
-
+      <HeaderScreen navigation={navigation} header={'Chọn ghế'} />
       <ScrollView>
         <IconSteps />
 

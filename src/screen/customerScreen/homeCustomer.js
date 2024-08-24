@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useCallback, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,15 +8,17 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {myColor} from '../../constants/myColor';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {useSelector, useDispatch} from 'react-redux';
 import FindTrip from '../../components/findTrip';
+import {customStyles} from '../../constants/customStyles';
+
 import {
   selectStartPoint,
   selectEndPoint,
   selectDateAction,
 } from '../../redux/actions/locationAction';
+import {useFocusEffect} from '@react-navigation/native';
 import dayjs from 'dayjs';
 const HomeCustomer = ({navigation}) => {
   // const user = useSelector(state => state.user);
@@ -27,6 +29,14 @@ const HomeCustomer = ({navigation}) => {
   );
 
   const dispatch = useDispatch();
+
+  //---------------------------------------------hiển thị bottom tab---------------------------------------------
+  useFocusEffect(
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({tabBarStyle: customStyles.bottomTab});
+    }, [navigation]),
+  );
 
   return (
     <SafeAreaView style={{flex: 1}}>

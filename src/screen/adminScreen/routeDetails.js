@@ -14,7 +14,6 @@ import {myColor} from '../../constants/myColor';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MyButton} from '../../components/button/myButton';
 import {ButtonDel} from '../../components/button/buttonDel';
-import axios from 'axios';
 import {DeletetDialog} from '../../components/dialog/dialogDelete';
 import {useSelector, useDispatch} from 'react-redux';
 import {deleteRouteData} from '../../redux/actions/routeAction';
@@ -22,9 +21,11 @@ import {deleteSeatByDates} from '../../api/seat';
 import RouteUpdate from './routeUpdate';
 import dayjs from 'dayjs';
 import TripList from './tripList';
+import TicketList from './ticketList';
 
+const LIST_TICKET = 'LIST_TICKET';
 const DETAILS = 'DETAILS';
-const LISTTRIP = 'LISTTRIP';
+const LIST_TRIP = 'LIST_TRIP';
 const RouteDetails = ({navigation}) => {
   const [validModal, setValidModal] = useState(false);
 
@@ -82,8 +83,23 @@ const RouteDetails = ({navigation}) => {
           flex: 1,
           backgroundColor: myColor.containerColor,
         }}>
-        <View style={styles.btncontainer}>
-          <View style={{width: '50%'}}>
+        <View style={styles.btnContainer}>
+          <View style={{width: '33.333%'}}>
+            <TouchableOpacity
+              style={styles.btnPage}
+              onPress={() => {
+                setPage(LIST_TICKET);
+              }}>
+              <Text style={styles.textBtnPage}>Vé xe</Text>
+            </TouchableOpacity>
+            {page === LIST_TICKET ? (
+              <View style={styles.lineBtnPage}></View>
+            ) : (
+              ''
+            )}
+          </View>
+
+          <View style={{width: '33.333%'}}>
             <TouchableOpacity
               style={styles.btnPage}
               onPress={() => {
@@ -94,22 +110,24 @@ const RouteDetails = ({navigation}) => {
             {page === DETAILS ? <View style={styles.lineBtnPage}></View> : ''}
           </View>
 
-          <View style={{width: '50%'}}>
+          <View style={{width: '33.333%'}}>
             <TouchableOpacity
               style={styles.btnPage}
               onPress={() => {
-                setPage(LISTTRIP);
+                setPage(LIST_TRIP);
               }}>
               <Text style={styles.textBtnPage}>Lộ trình</Text>
             </TouchableOpacity>
-            {page === LISTTRIP ? <View style={styles.lineBtnPage}></View> : ''}
+            {page === LIST_TRIP ? <View style={styles.lineBtnPage}></View> : ''}
           </View>
         </View>
-        {page === DETAILS ? (
+        {page === DETAILS && (
           <Details setValidModal={setValidModal} navigation={navigation} />
-        ) : (
-          <TripList navigation={navigation} />
         )}
+
+        {page === LIST_TRIP && <TripList navigation={navigation} />}
+
+        {page === LIST_TICKET && <TicketList navigation={navigation} />}
       </View>
     </SafeAreaView>
   );
@@ -270,7 +288,7 @@ export default RouteDetails;
 const styles = StyleSheet.create({
   //---------------------styles cho buton chuyển màn hình--------------------------------
 
-  btncontainer: {
+  btnContainer: {
     width: '100%',
     height: 50,
     flexDirection: 'row',

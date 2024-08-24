@@ -7,7 +7,7 @@ export const ButtonDel = ({onPress, disabled}) => {
       style={{
         width: '100%',
         height: 50,
-        backgroundColor: disabled ? 'gray' : 'red',
+        backgroundColor: disabled ? '#CCCCCC' : 'red',
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',

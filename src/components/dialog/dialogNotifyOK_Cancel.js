@@ -1,7 +1,15 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {Text, Image, TouchableOpacity, Modal} from 'react-native';
+import {Text, Image, TouchableOpacity, Modal, View} from 'react-native';
+import {myColor} from '../../constants/myColor';
 
-const DialogNotify = ({visible, source, title, content, onPress}) => {
+const DialogNotifyOK_Cancel = ({
+  visible,
+  source,
+  title,
+  content,
+  onPressCancel,
+  onPress,
+}) => {
   return (
     <Modal visible={visible} transparent={true}>
       <TouchableOpacity
@@ -44,23 +52,45 @@ const DialogNotify = ({visible, source, title, content, onPress}) => {
             }}>
             {content}
           </Text>
-          <TouchableOpacity
-            onPress={onPress}
+          <View
             style={{
+              flexDirection: 'row',
+              width: '100%',
               position: 'absolute',
               bottom: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              height: 50,
-              borderTopWidth: 1,
-              borderColor: '#CCCCCC',
             }}>
-            <Text style={{fontSize: 20, color: '#000000'}}>Đóng</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={onPressCancel}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '50%',
+                height: 50,
+                borderTopWidth: 1,
+                borderColor: '#CCCCCC',
+                borderRightWidth: 1,
+              }}>
+              <Text style={{fontSize: 20, color: '#000000'}}>Hủy</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={onPress}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '50%',
+                height: 50,
+                borderTopWidth: 1,
+                borderColor: '#CCCCCC',
+              }}>
+              <Text style={{fontSize: 20, color: myColor.buttonColor}}>
+                Tiếp tục
+              </Text>
+            </TouchableOpacity>
+          </View>
         </TouchableOpacity>
       </TouchableOpacity>
     </Modal>
   );
 };
-export default DialogNotify;
+export default DialogNotifyOK_Cancel;

@@ -6,8 +6,12 @@ import TripList_Cus from '../screen/customerScreen/tripList_Cus';
 import SelectPickUpAndDropOff from '../screen/customerScreen/slectPickUp_Dropoff';
 import PaymentScreen from '../screen/customerScreen/payMent';
 import OrderInformation from '../screen/customerScreen/orderInformation';
+import MyTicketScreen from '../screen/customerScreen/myTicketScreen';
+import TicketDetails from '../screen/customerScreen/ticketDetails';
+import AccountScreen from '../screen/customerScreen/accountScreen';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
+import CustomerDetails from '../screen/adminScreen/customerDetails';
 
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -48,6 +52,52 @@ const CustomerNav = () => {
           ),
         }}
       />
+
+      <Tab.Screen
+        name="TicketNav"
+        component={TicketNav}
+        options={{
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={[
+                styles.tabBarLabel,
+                {color: focused ? myColor.buttonColor : 'black'},
+              ]}>
+              Vé của tôi
+            </Text>
+          ),
+
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/bus-ticket.png')}
+              style={[styles.iconTab, focused && styles.focusIcon]}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="AccountNav"
+        component={AccountNav}
+        options={{
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={[
+                styles.tabBarLabel,
+                {color: focused ? myColor.buttonColor : 'black'},
+              ]}>
+              Tài khoản
+            </Text>
+          ),
+
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/user4.png')}
+              style={[styles.iconTab, focused && styles.focusIcon]}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -83,6 +133,58 @@ export const HomeNav = () => {
       />
       <Stack.Screen name="OrderInformation" component={OrderInformation} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+    </Stack.Navigator>
+  );
+};
+
+export const TicketNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="MyTicketScreen"
+      screenOptions={{
+        headerShown: false,
+
+        cardStyleInterpolator: ({current, layouts}) => ({
+          cardStyle: {
+            transform: [
+              {
+                translateX: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.width, 0],
+                }),
+              },
+            ],
+          },
+        }),
+      }}>
+      <Stack.Screen name="MyTicketScreen" component={MyTicketScreen} />
+      <Stack.Screen name="TicketDetails" component={TicketDetails} />
+    </Stack.Navigator>
+  );
+};
+
+export const AccountNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="AccountScreen"
+      screenOptions={{
+        headerShown: false,
+
+        cardStyleInterpolator: ({current, layouts}) => ({
+          cardStyle: {
+            transform: [
+              {
+                translateX: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.width, 0],
+                }),
+              },
+            ],
+          },
+        }),
+      }}>
+      <Stack.Screen name="AccountScreen" component={AccountScreen} />
+      <Stack.Screen name="CustomerDetails" component={CustomerDetails} />
     </Stack.Navigator>
   );
 };

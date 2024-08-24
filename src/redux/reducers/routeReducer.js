@@ -4,6 +4,8 @@ import {
   SELECT_ROUTE,
   UPDATE_ROUTE,
   DELETE_ROUTE,
+  SELECT_ROUTE_BY_ID,
+  LOGOUT,
 } from '../actions/routeAction';
 
 const initialState = {
@@ -42,6 +44,12 @@ const routeReducer = (state = initialState, action) => {
         route: action.payload,
       };
 
+    case SELECT_ROUTE_BY_ID:
+      return {
+        ...state,
+        route: action.payload,
+      };
+
     case UPDATE_ROUTE:
       const updateRoute = state.routes.map(route => {
         if (route._id === action.payload._id) {
@@ -64,6 +72,12 @@ const routeReducer = (state = initialState, action) => {
       return {
         ...state,
         routes: deleteRoute,
+        route: initialState.route,
+      };
+
+    case LOGOUT:
+      return {
+        ...state,
         route: initialState.route,
       };
 

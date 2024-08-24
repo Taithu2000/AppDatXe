@@ -1,4 +1,10 @@
-import React, {Component, useEffect, useState, useCallback} from 'react';
+import React, {
+  Component,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import {
   SafeAreaView,
   View,
@@ -10,6 +16,7 @@ import {
   ScrollView,
   FlatList,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {MyStatusBar} from '../../components/myStatusBar';
@@ -22,6 +29,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
 import ItemRoute from '../../components/itemFlatList/itemRoute';
 import {customStyles} from '../../constants/customStyles';
+
+const windowWidth = Dimensions.get('window').width;
 
 const RouteList = ({navigation}) => {
   const ACTIVE = 'ACTIVE';
@@ -37,8 +46,11 @@ const RouteList = ({navigation}) => {
   const {routes} = useSelector(state => state.route);
   const dispatch = useDispatch();
 
-  const [newRoutes, setNewRoutes] = useState(routes);
+  const [routerActives, setRouteActives] = useState([]);
+  const [routerStopped, setRouteStopped] = useState([]);
 
+  const stepCarousel = useRef();
+  const [index, setIndex] = useState(0);
   //---------------------------------------------hiển thị bottom tab---------------------------------------------
   useFocusEffect(
     useCallback(() => {
@@ -62,25 +74,66 @@ const RouteList = ({navigation}) => {
 
   useEffect(() => {
     const filterRoutes = () => {
-      const data = routes.filter(route => {
-        if (page === ACTIVE) {
-          return (
-            new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() >=
-            date.getTime()
-          );
-        } else {
-          return (
-            new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() <
-            date.getTime()
-          );
-        }
+      const dataActive = routes.filter(route => {
+        return (
+          new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() >=
+          date.getTime()
+        );
       });
-      setNewRoutes(data);
-    };
-    filterRoutes();
-  }, [routes, page]);
 
-  // ----------------------------------------------------------------ITEM  FLASLIT----------------------------------------------------------------
+      const dataStopped = routes.filter(route => {
+        return (
+          new Date(dayjs(route.end_date).format('YYYY-MM-DD')).getTime() <
+          date.getTime()
+        );
+      });
+
+      setRouteActives(dataActive);
+      setRouteStopped(dataStopped);
+    };
+
+    filterRoutes();
+  }, [routes]);
+  // ------------------------------------------------------------Chuyển danh sách khi chon page---------------------------------------------------------------
+
+  useEffect(() => {
+    if (page === ACTIVE) {
+      stepCarousel.current.scrollTo({
+        x: 0,
+        y: 0,
+        animated: true,
+      });
+    } else {
+      stepCarousel.current.scrollTo({
+        x: windowWidth,
+        y: 0,
+        animated: true,
+      });
+    }
+  }, [page]);
+
+  useEffect(() => {
+    if (index === 0) {
+      setPage(ACTIVE);
+    } else {
+      setPage(STOPPED);
+    }
+  }, [index]);
+
+  const handleScroll = e => {
+    if (!e) {
+      return;
+    }
+    const {nativeEvent} = e;
+
+    if (nativeEvent && nativeEvent.contentOffset) {
+
+      const currentOffset = nativeEvent.contentOffset.x;
+      if (currentOffset > 0) {
+        setIndex(Math.floor((currentOffset + windowWidth / 2) / windowWidth));
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -163,20 +216,72 @@ const RouteList = ({navigation}) => {
           <Search onChangeText={setSearchUser} value={searchUsers} />
 
           {/* danh sách */}
-          <FlatList
-            data={newRoutes}
-            renderItem={({item}) => (
-              <ItemRoute
-                item={item}
-                onPress={() => {
-                  dispatch(selectRoute(item));
-                  navigation.navigate('RouteDetails');
-                }}
-              />
-            )}
-            keyExtractor={item => item._id}
-            ListFooterComponent={<View style={{height: 75}} />}
-          />
+
+          <ScrollView
+            ref={stepCarousel}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}>
+            <View style={styles.containerScroll}>
+              <View style={{width: windowWidth}}>
+                {routerActives.length > 0 && (
+                  <FlatList
+                    data={routerActives}
+                    renderItem={({item}) => (
+                      <ItemRoute
+                        item={item}
+                        onPress={() => {
+                          dispatch(selectRoute(item));
+                          navigation.navigate('RouteDetails');
+                        }}
+                      />
+                    )}
+                    keyExtractor={item => item._id}
+                    ListFooterComponent={<View style={{height: 75}} />}
+                  />
+                )}
+
+                {routerActives.length == 0 && (
+                  <View style={styles.containerNodata}>
+                    <Image
+                      source={require('../../assets/images/train-journey.png')}
+                      style={styles.imageData}
+                    />
+                    <Text style={{fontSize: 18}}>Không có dữ liệu!</Text>
+                  </View>
+                )}
+              </View>
+              <View style={{width: windowWidth}}>
+                {routerStopped.length > 0 && (
+                  <FlatList
+                    data={routerStopped}
+                    renderItem={({item}) => (
+                      <ItemRoute
+                        item={item}
+                        onPress={() => {
+                          dispatch(selectRoute(item));
+                          navigation.navigate('RouteDetails');
+                        }}
+                      />
+                    )}
+                    keyExtractor={item => item._id}
+                    ListFooterComponent={<View style={{height: 75}} />}
+                  />
+                )}
+
+                {routerStopped.length == 0 && (
+                  <View style={styles.containerNodata}>
+                    <Image
+                      source={require('../../assets/images/train-journey.png')}
+                      style={styles.imageData}
+                    />
+                    <Text style={{fontSize: 18}}>Không có dữ liệu!</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -220,5 +325,25 @@ const styles = StyleSheet.create({
   textbtnPage: {
     color: '#000000',
     fontSize: 18,
+  },
+
+  containerScroll: {
+    width: 2 * windowWidth,
+    flexDirection: 'row',
+  },
+
+  containerNodata: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  imageData: {
+    width: 100,
+    height: 100,
+    margin: 10,
+    marginTop: -50,
+    alignSelf: 'center',
+    tintColor: '#2fd6c3',
   },
 });

@@ -33,19 +33,10 @@ const TripList = ({navigation}) => {
     const data = await getSeatByRouteIdandDate(route._id, date);
     setSeat(data);
   };
-  useFocusEffect(
-    useCallback(() => {
-      getDataTrip();
-      getDataSeat();
-    }, [date]),
-  );
-
-  console.log(seat);
-  console.log(
-    '----------------------------------------------------------------',
-  );
-
-  console.log(trips);
+  useEffect(() => {
+    getDataTrip();
+    getDataSeat();
+  }, [date]);
 
   return (
     <View style={styles.tripContainer}>
@@ -96,7 +87,6 @@ const styles = StyleSheet.create({
 
   flatListContainer: {
     flex: 1,
-    width: '100%',
     alignItems: 'center',
     backgroundColor: '#cbd5d6',
   },

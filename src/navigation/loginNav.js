@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 const LoginNav = () => {
   return (
     <Stack.Navigator
-      initialRouteName="PhoneNumber"
+      initialRouteName="Splash"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="PhoneNumber" component={PhoneNumber} />

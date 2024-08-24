@@ -16,7 +16,7 @@ import {MyButton} from '../../components/button/myButton';
 import {MyStatusBar} from '../../components/myStatusBar';
 import {registerUser} from '../../redux/actions/userAction';
 import {useDispatch, useSelector} from 'react-redux';
-
+import {setRoles} from '../../redux/actions/authorization';
 const windowHeight = Dimensions.get('window').height;
 
 const NewPassword = ({route, navigation}) => {
@@ -31,23 +31,12 @@ const NewPassword = ({route, navigation}) => {
   const [isvaluecfPass, setValuecfPass] = useState(true);
 
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
-  const registrationError = useSelector(state => state.registrationError);
 
   // kiểm tra tính hợp lệ của mật khảu
   const verifyPassword = password => {
     if (!password) return true;
     let regex = new RegExp(/^(?!.*s).{6,}$/);
     return regex.test(password);
-  };
-
-  //   hide and show the password
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleShowConfirmPass = () => {
-    setShowCfPass(!showcfPass);
   };
 
   // không cho phép nhấn button hoặc ngược lại
@@ -71,9 +60,10 @@ const NewPassword = ({route, navigation}) => {
       sex: '',
       image: '',
     };
-    const err = await dispatch(registerUser(userData));
-    if (!registrationError) {
-      navigation.replace('HomeUser');
+    const response = await dispatch(registerUser(userData));
+    if (response) {
+      dispatch(setRoles('user'));
+      navigation.replace('CustomerNav');
     }
   };
 
@@ -159,7 +149,7 @@ const NewPassword = ({route, navigation}) => {
                   : require('../../assets/images/eye.png')
               }
               onPress={() => {
-                toggleShowPassword();
+                setShowPassword(!showPassword);
               }}
               isSecureTextEntry={!showPassword}
             />
@@ -185,7 +175,7 @@ const NewPassword = ({route, navigation}) => {
                   : require('../../assets/images/eye.png')
               }
               onPress={() => {
-                toggleShowConfirmPass();
+                setShowCfPass(!showcfPass);
               }}
               isSecureTextEntry={!showcfPass}
             />

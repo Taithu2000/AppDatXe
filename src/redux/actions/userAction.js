@@ -4,6 +4,7 @@ export const GET_USER_DATA = 'GET_USERS_DATA';
 export const USER_REGISTER = 'USER_REGISTER';
 export const GET_USERS = 'GET_USERS';
 export const UPDATE_USER = 'UPDATE_USER';
+export const LOGOUT = 'LOGOUT';
 
 //${IP}:3306/
 //////////////////////////////// dia chỉ ip
@@ -13,7 +14,6 @@ const IP = 'http://10.0.2.2:3306';
 
 import axios from 'axios';
 import {Alert} from 'react-native';
-import PhoneNumber from '../../screen/loginScreen/phoneNumber';
 
 export const getOneUse = data => dispatch => {
   try {
@@ -50,7 +50,7 @@ export const registerUser = userData => async dispatch => {
     const response = await axios.post(`${IP}/users`, userData);
     dispatch({type: USER_REGISTER, payload: response.data});
 
-    return null;
+    return true;
   } catch (error) {
     throw new Error('Không thể gọi data', error);
   }
@@ -72,7 +72,7 @@ export const fetchUsersDataSSS = () => async dispatch => {
 
 export const updatedUserData = (_id, data) => async dispatch => {
   try {
-    const response = await axios.PUT(`${IP}/users/update/${_id}`, data);
+    const response = await axios.put(`${IP}/users/update/${_id}`, data);
     dispatch({
       type: UPDATE_USER,
       payload: response.data,
@@ -82,4 +82,13 @@ export const updatedUserData = (_id, data) => async dispatch => {
   } catch (error) {
     throw new Error('Không thể gọi data', error);
   }
+};
+
+//đăng xuất
+
+export const logoutUser = () => dispatch => {
+  dispatch({
+    type: LOGOUT,
+    payload: null,
+  });
 };

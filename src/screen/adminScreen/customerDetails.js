@@ -16,17 +16,19 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import DatePicker from 'react-native-date-picker';
 import {MyButton} from '../../components/button/myButton';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {DeletetDialog} from '../../components/dialog/dialogDelete';
 import dayjs from 'dayjs';
-
+import {updatedUserData} from '../../redux/actions/userAction';
 // import {IP} from '@env';
 
 const IP = 'http://10.0.2.2:3306';
 
 const CustomerDetails = ({navigation}) => {
   const {user} = useSelector(state => state.user);
+  const {role} = useSelector(state => state.role);
+
   const date = useRef(new Date()).current;
 
   const [open, setOpen] = useState(false);
@@ -36,8 +38,8 @@ const CustomerDetails = ({navigation}) => {
   const [sex, setSex] = useState(user.sex);
   const [birthDate, setBirthDate] = useState(user.birthDate);
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
-  const [password, setPassWord] = useState(user.password);
 
+  const dispatch = useDispatch();
   // const [isUpdated, setIsUpdated] = useState(false);
 
   const [isName, setIsName] = useState(true);
@@ -67,15 +69,15 @@ const CustomerDetails = ({navigation}) => {
   const updatedUser = async () => {
     const data = {
       name,
-      password,
       email,
       sex,
       birthDate: dayjs(birthDate).format('YYYY-MM-DD'),
     };
 
     try {
-      await axios.put(`${IP}/users/update/${user._id}`, data);
+      await dispatch(updatedUserData(user._id, data));
       ToastAndroid.show('Cập nhật thông tin thành công !', ToastAndroid.SHORT);
+      navigation.goBack();
     } catch (e) {
       console.log('Lỗi cập nhật thông tin: ', e);
       ToastAndroid.show('Không thể cập nhật !', ToastAndroid.SHORT);
@@ -334,7 +336,7 @@ const CustomerDetails = ({navigation}) => {
               }}>
               <TextInput
                 style={{fontSize: 18, color: '#000000', paddingLeft: 15}}
-                value={dayjs(birthDate).format('DD/MM/YYYY')}
+                value={birthDate ? dayjs(birthDate).format('DD/MM/YYYY') : ''}
                 placeholder="DD/MM/YYYY"
                 editable={false}
               />
@@ -378,7 +380,10 @@ const CustomerDetails = ({navigation}) => {
             }}>
             {/* Cập nhật tài khoản--------------------------Cập nhật tài khoản---------------------------- */}
 
-            <View style={{width: '60%'}}>
+            <View
+              style={{
+                width: role === 'admin' ? '60%' : '100%',
+              }}>
               <MyButton
                 nameBtn={'Cập nhật'}
                 onPress={async () => {
@@ -391,23 +396,26 @@ const CustomerDetails = ({navigation}) => {
               />
             </View>
             {/* Xóa tài khoản--------------------------Xóa tài khoản---------------------------- */}
-            <View style={{width: '35%'}}>
-              <TouchableOpacity
-                style={{
-                  width: '100%',
-                  height: 50,
-                  borderWidth: 1,
-                  backgroundColor: 'red',
-                  borderRadius: 30,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  setIsVisible(true);
-                }}>
-                <Text style={{color: '#FFFFFF', fontSize: 20}}>Xóa</Text>
-              </TouchableOpacity>
-            </View>
+
+            {console.log(navigation)}
+            {role === 'admin' && (
+              <View style={{width: '35%'}}>
+                <TouchableOpacity
+                  style={{
+                    width: '100%',
+                    height: 50,
+                    backgroundColor: 'red',
+                    borderRadius: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    setIsVisible(true);
+                  }}>
+                  <Text style={{color: '#FFFFFF', fontSize: 20}}>Xóa</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
             {/* Thông báo xóa tài khoản-----------------Thông báo xóa tài khoản--------------------------- */}
 

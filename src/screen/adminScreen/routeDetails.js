@@ -18,6 +18,10 @@ import {DeletetDialog} from '../../components/dialog/dialogDelete';
 import {useSelector, useDispatch} from 'react-redux';
 import {deleteRouteData} from '../../redux/actions/routeAction';
 import {deleteSeatByDates} from '../../api/seat';
+import {
+  deleteManyTripByGroupId,
+  deleteManyTripByRouteId,
+} from '../../api/tripsAPI';
 import RouteUpdate from './routeUpdate';
 import dayjs from 'dayjs';
 import TripList from './tripList';
@@ -174,15 +178,18 @@ const Details = ({setValidModal, navigation}) => {
 
   //----------------------------------------------------Xóa route //----------------------------------------------------
   const deleteRouter = async () => {
-    await deleteSeatByDates(
-      route._id,
-      new Date(dayjs(new Date()).format('YYYY-MM-DD')),
-    );
-    const response = await dispatch(deleteRouteData(route._id));
+    try {
+      await deleteSeatByDates(route._id, new Date(dayjs().startOf('day')));
 
-    if (response) {
+      await deleteManyTripByRouteId(
+        route._id,
+        new Date(dayjs().startOf('day')),
+      );
+      const response = await dispatch(deleteRouteData(route._id));
+
       ToastAndroid.show('Xóa thành công !', ToastAndroid.SHORT);
-    } else {
+    } catch (e) {
+      console.log('Lỗi xóa route:', e);
       ToastAndroid.show('Không thể xóa, thử lại sau !', ToastAndroid.SHORT);
     }
   };

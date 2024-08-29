@@ -13,6 +13,8 @@ import HeaderTripList from '../../components/header/headerTripList';
 import {useSelector} from 'react-redux';
 import {getTripByRouteIdAndDate} from '../../api/tripsAPI';
 import {getSeatByRouteIdandDate} from '../../api/seat';
+import SkeletonTicket from '../../components/skeleton/skeletonItemTicket';
+import NoDataComponent from '../../components/noDataComponent';
 import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
@@ -24,19 +26,31 @@ const TripList = ({navigation}) => {
   const [trips, setTrips] = useState([]);
   const [seat, setSeat] = useState({});
 
+  const [isLoading, setIsLoading] = useState(false);
+
   //gọi data lấy danh sách trip
-  const getDataTrip = async () => {
-    const data = await getTripByRouteIdAndDate(route._id, date);
-    setTrips(data);
+  const getDataTripAndSeat = async () => {
+    setIsLoading(true);
+    try {
+      const dataTrip = await getTripByRouteIdAndDate(route._id, date);
+      setTrips(dataTrip);
+      const dataSeat = await getSeatByRouteIdandDate(route._id, date);
+      setSeat(dataSeat);
+      setIsLoading(false);
+    } catch (e) {
+      setIsLoading(false);
+    }
   };
-  const getDataSeat = async () => {
-    const data = await getSeatByRouteIdandDate(route._id, date);
-    setSeat(data);
-  };
+
   useEffect(() => {
-    getDataTrip();
-    getDataSeat();
+    getDataTripAndSeat();
   }, [date]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getDataTripAndSeat();
+    }, [navigation]),
+  );
 
   return (
     <View style={styles.tripContainer}>
@@ -48,19 +62,9 @@ const TripList = ({navigation}) => {
         }}
       />
 
-      {trips.length === 0 ? (
-        <View style={[styles.flatListContainer, {justifyContent: 'center'}]}>
-          <Image
-            source={require('../../assets/images/train-journey.png')}
-            style={styles.imageData}
-          />
-
-          <Text style={{fontSize: 16, alignSelf: 'center'}}>
-            Hôm nay không có lộ trình!
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.flatListContainer}>
+      <View style={styles.flatListContainer}>
+        {isLoading && <SkeletonTicket />}
+        {!isLoading && (
           <FlatList
             data={trips}
             renderItem={({item}) => (
@@ -74,8 +78,14 @@ const TripList = ({navigation}) => {
             )}
             keyExtractor={item => item._id}
           />
-        </View>
-      )}
+        )}
+        {trips.length == 0 && !isLoading && (
+          <NoDataComponent
+            source={require('../../assets/images/train-journey.png')}
+            content={'Không có lộ trình cho ngày này'}
+          />
+        )}
+      </View>
     </View>
   );
 };

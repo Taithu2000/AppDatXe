@@ -133,6 +133,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
     return flag;
   };
 
+  //thêm thời gian cho thời gian di chuyển
   useEffect(() => {
     const times = [];
     for (let hour = 1; hour <= 48; hour++) {
@@ -303,7 +304,11 @@ const AddRoute = ({navigation, route: myRoute}) => {
 
             <View style={styles.viewText}>
               {renderLabelStartDate()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => {
+                  setIsModalstart_date(true);
+                }}>
                 <TextInput
                   placeholder="Ngày bắt đầu"
                   style={styles.textInput}
@@ -322,7 +327,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
                     source={require('../../assets/images/daily-calendar.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>
@@ -352,7 +357,11 @@ const AddRoute = ({navigation, route: myRoute}) => {
 
             <View style={styles.viewText}>
               {renderLabeEndDate()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => {
+                  setIsModalend_date(true);
+                }}>
                 <TextInput
                   placeholder="Ngày kết thúc"
                   style={styles.textInput}
@@ -369,7 +378,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
                     source={require('../../assets/images/daily-calendar.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>
@@ -450,7 +459,9 @@ const AddRoute = ({navigation, route: myRoute}) => {
 
             <View style={styles.viewText}>
               {renderLabeldDeparture_time()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => setIsDeparture_time(true)}>
                 <TextInput
                   placeholder="Giờ xuất phát"
                   style={styles.textInput}
@@ -465,7 +476,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
                     source={require('../../assets/images/time-quarter-to.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>
@@ -493,7 +504,11 @@ const AddRoute = ({navigation, route: myRoute}) => {
 
             <View style={styles.viewText}>
               {renderLabeldTotal_tiem()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => {
+                  setIsTotal_time(true);
+                }}>
                 <TextInput
                   placeholder="Thời gian di chuyển"
                   style={styles.textInput}
@@ -510,7 +525,7 @@ const AddRoute = ({navigation, route: myRoute}) => {
                     source={require('../../assets/images/duration-alt.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>

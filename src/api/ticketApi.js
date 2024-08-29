@@ -36,3 +36,33 @@ export const getAllTicketByRouteInDay = async (route_id, date) => {
     throw new Error('Lỗi lấy thông tin ticket :' + err);
   }
 };
+
+//lấy tất cả vé trong 1 ngày
+export const getAllTicketByDay = async date => {
+  try {
+    const response = await axios.get(`${IP}/ticket/day/${date}`);
+    return response.data;
+  } catch (err) {
+    throw new Error('Lỗi lấy thông tin ticket trong 1 ngày:' + err);
+  }
+};
+
+//lấy tất cả vé trong 1 tháng
+export const getAllTicketByMonth = async date => {
+  try {
+    const response = await axios.get(`${IP}/ticket/month/${date}`);
+    return response.data;
+  } catch (err) {
+    throw new Error('Lỗi lấy thông tin ticket trong 1 ngày:' + err);
+  }
+};
+
+//lấy tất cả vé trong 6 tháng gần nhất
+export const getAllTicketBySixMonth = async date => {
+  try {
+    const response = await axios.get(`${IP}/ticket/6_month/${date}`);
+    return response.data;
+  } catch (err) {
+    throw new Error('Lỗi lấy thông tin ticket trong 1 ngày:' + err);
+  }
+};

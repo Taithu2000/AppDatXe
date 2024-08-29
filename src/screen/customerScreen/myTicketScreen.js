@@ -1,18 +1,10 @@
-import React, {
-  Component,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import React, {useEffect, useState, useCallback, useMemo, useRef} from 'react';
 import {
   SafeAreaView,
   View,
   Image,
   Text,
   StatusBar,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   FlatList,
@@ -28,15 +20,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
 import {customStyles} from '../../constants/customStyles';
 import {getAllTicketByUserId} from '../../api/ticketApi';
-import {set} from 'react-native-reanimated';
+import SkeletonTicket from '../../components/skeleton/skeletonItemTicket';
+import NoDataComponent from '../../components/noDataComponent';
 
 const windowWidth = Dimensions.get('window').width;
+
 const MyTicketScreen = ({navigation}) => {
   const CURRENT = 'CURRENT';
   const DEPARTED = 'DEPARTED';
   const [page, setPage] = useState(CURRENT);
 
   const timeNow = dayjs();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {buses} = useSelector(state => state.bus);
   const {routes} = useSelector(state => state.route);
@@ -84,7 +79,6 @@ const MyTicketScreen = ({navigation}) => {
       parent?.setOptions({tabBarStyle: customStyles.bottomTab});
     }, [navigation]),
   );
-  console.log(user);
   //---------------------------------------------gọi data--------------------------------------------
 
   const getDataRouteAndBus = async () => {
@@ -97,13 +91,20 @@ const MyTicketScreen = ({navigation}) => {
   }, []);
 
   const getDataTicket = async () => {
-    const data = await getAllTicketByUserId(user._id);
+    setIsLoading(true);
+    try {
+      const data = await getAllTicketByUserId(user._id);
 
-    //sắp xếp theo vé đặt mới nhất
-    const sortTicket = data.sort((a, b) => {
-      return dayjs(b.create_date) - dayjs(a.create_date);
-    });
-    setTickets(sortTicket);
+      //sắp xếp theo vé đặt mới nhất
+      const sortTicket = data.sort((a, b) => {
+        return dayjs(b.create_date) - dayjs(a.create_date);
+      });
+      setTickets(sortTicket);
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      console.log('Lỗi lấy dữ liệu');
+    }
   };
 
   useFocusEffect(
@@ -302,36 +303,58 @@ const MyTicketScreen = ({navigation}) => {
 
           <ScrollView
             ref={stepCarousel}
+            scrollEventThrottle={16}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             pagingEnabled
             onScroll={handleScroll}>
             <View style={styles.containerFlatList}>
               <View style={{width: windowWidth}}>
-                <FlatList
-                  data={ticketCurrents}
-                  renderItem={({item}) => <Item ticket={item} />}
-                  keyExtractor={item => item._id}
-                  ListFooterComponent={
-                    <View
-                      style={{height: 100}}
-                      showsVerticalScrollIndicator={false}
-                    />
-                  }
-                />
+                {isLoading && <SkeletonTicket />}
+
+                {!isLoading && (
+                  <FlatList
+                    data={ticketCurrents}
+                    renderItem={({item}) => <Item ticket={item} />}
+                    keyExtractor={item => item._id}
+                    ListFooterComponent={
+                      <View
+                        style={{height: 100}}
+                        showsVerticalScrollIndicator={false}
+                      />
+                    }
+                  />
+                )}
+
+                {ticketCurrents.length == 0 && !isLoading && (
+                  <NoDataComponent
+                    source={require('../../assets/images/user-roadmap.png')}
+                    content={'Bạn chưa có hành trình nào sắp tới'}
+                  />
+                )}
               </View>
               <View style={{width: windowWidth}}>
-                <FlatList
-                  data={ticketDeparted}
-                  renderItem={({item}) => <Item ticket={item} />}
-                  keyExtractor={item => item._id}
-                  ListFooterComponent={
-                    <View
-                      style={{height: 100}}
-                      showsVerticalScrollIndicator={false}
-                    />
-                  }
-                />
+                {isLoading && <SkeletonTicket />}
+                {!isLoading && (
+                  <FlatList
+                    data={ticketDeparted}
+                    renderItem={({item}) => <Item ticket={item} />}
+                    keyExtractor={item => item._id}
+                    ListFooterComponent={
+                      <View
+                        style={{height: 100}}
+                        showsVerticalScrollIndicator={false}
+                      />
+                    }
+                  />
+                )}
+
+                {ticketDeparted.length == 0 && !isLoading && (
+                  <NoDataComponent
+                    source={require('../../assets/images/user-roadmap.png')}
+                    content={'Bạn chưa có hành trình nào '}
+                  />
+                )}
               </View>
             </View>
           </ScrollView>
@@ -437,4 +460,16 @@ const styles = StyleSheet.create({
   },
 
   containerFlatList: {width: 2 * windowWidth, flexDirection: 'row'},
+  viewNoData: {
+    alignSelf: 'center',
+    position: 'absolute',
+    alignItems: 'center',
+    marginTop: 120,
+  },
+  imgData: {
+    tintColor: '#00BFFF',
+    margin: 20,
+    width: 100,
+    height: 100,
+  },
 });

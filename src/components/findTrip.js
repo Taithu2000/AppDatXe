@@ -3,7 +3,7 @@ import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColor} from '../constants/myColor';
 import {MyButton} from './button/myButton';
 import SelectProvince from '../screen/customerScreen/selectProvince';
-import MyCalendarFull from './calendar/MyPickerHours';
+import MyCalendarFull from './calendar/myCalendarFull';
 import dayjs from 'dayjs';
 
 const maxDate = dayjs().add(30, 'day');

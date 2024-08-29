@@ -359,7 +359,9 @@ const AddTrip = ({navigation}) => {
 
             <View style={styles.viewText}>
               {renderLabeldpickupTime()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => setIsPickUpTime(true)}>
                 <TextInput
                   placeholder="Giờ đón"
                   style={styles.textInput}
@@ -374,7 +376,7 @@ const AddTrip = ({navigation}) => {
                     source={require('../../assets/images/time-quarter-to.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>
@@ -402,7 +404,11 @@ const AddTrip = ({navigation}) => {
 
             <View style={styles.viewText}>
               {renderLabeldTotal_tiem()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => {
+                  setIsTotalTime(true);
+                }}>
                 <TextInput
                   placeholder="Thời gian di chuyển"
                   editable={false}
@@ -419,7 +425,7 @@ const AddTrip = ({navigation}) => {
                     source={require('../../assets/images/duration-alt.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>

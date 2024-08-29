@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  ScrollView,
-  Dimensions,
   Modal,
   FlatList,
 } from 'react-native';
@@ -27,12 +25,14 @@ import {
   selectDateAction,
 } from '../../redux/actions/locationAction';
 import {compareHourNow_Departure_time} from '../../constants/formatHH-mm';
+import SkeletonTicket from '../../components/skeleton/skeletonItemTicket';
+import NoDataComponent from '../../components/noDataComponent';
 
 const TripList_Cus = ({navigation}) => {
   const {startLocation, endLocation, departure_date} = useSelector(
     state => state.location,
   );
-  const {buses} = useSelector(state => state.bus);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dayNow = dayjs();
   const [start, setStart] = useState(startLocation);
@@ -56,11 +56,11 @@ const TripList_Cus = ({navigation}) => {
       departure_date.startOf('day').valueOf() ===
       dayNow.startOf('day').valueOf()
     ) {
-      const newData = trips.find(trip => {
+      const newData = trips.filter(trip => {
         return compareHourNow_Departure_time(trip.pickupTime);
       });
 
-      return newData ? [newData] : [];
+      return newData ? newData : [];
     } else {
       return trips;
     }
@@ -83,28 +83,33 @@ const TripList_Cus = ({navigation}) => {
     await dispatch(getAllbusData());
   };
 
-  const getSeat = async () => {
-    const response = await getSeatByDate(departure_date.startOf('day'));
-    setSeats(response);
-  };
-
-  const getTrip = async () => {
-    const response = await getTripByDate_Start_End(
-      departure_date.startOf('day'),
-      startLocation,
-      endLocation,
-    );
-    const data = findTrip(response);
-    sortTrips(data);
-  };
-
   useEffect(() => {
     getBuses();
   }, []);
 
+  const getDataSeatAndTrip = async () => {
+    setIsLoading(true);
+    try {
+      const dataSeat = await getSeatByDate(departure_date.startOf('day'));
+      setSeats(dataSeat);
+
+      const dataTrip = await getTripByDate_Start_End(
+        departure_date.startOf('day'),
+        startLocation,
+        endLocation,
+      );
+      const newDataTrip = findTrip(dataTrip);
+      sortTrips(newDataTrip);
+
+      setIsLoading(false);
+    } catch (e) {
+      console.log('Lỗi lấy dữ liêu');
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    getTrip();
-    getSeat();
+    getDataSeatAndTrip();
   }, [departure_date, startLocation, endLocation]);
 
   return (
@@ -252,25 +257,35 @@ const TripList_Cus = ({navigation}) => {
           {/* -------------------------danh sách------------------------*/}
 
           <View style={styles.containerList}>
-            <FlatList
-              data={trips}
-              renderItem={({item}) => {
-                const seat = seats.find(seat => {
-                  return seat._id === item.seat_id;
-                });
+            {isLoading && <SkeletonTicket />}
+            {!isLoading && (
+              <FlatList
+                data={trips}
+                renderItem={({item}) => {
+                  const seat = seats.find(seat => {
+                    return seat._id === item.seat_id;
+                  });
 
-                return (
-                  <ItemTrip
-                    item={item}
-                    seat={seat}
-                    onPress={() => {
-                      navigation.navigate('SelectSeats', {trip: item, seat});
-                    }}
-                  />
-                );
-              }}
-              keyExtractor={item => item._id}
-            />
+                  return (
+                    <ItemTrip
+                      item={item}
+                      seat={seat}
+                      onPress={() => {
+                        navigation.navigate('SelectSeats', {trip: item, seat});
+                      }}
+                    />
+                  );
+                }}
+                keyExtractor={item => item._id}
+              />
+            )}
+
+            {trips.length == 0 && !isLoading && (
+              <NoDataComponent
+                source={require('../../assets/images/train-journey.png')}
+                content={'Hiện tại không có chuyến đi nào'}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -279,6 +294,15 @@ const TripList_Cus = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  containerSeleket: {
+    width: 100,
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    borderColor: '#E2E2E2',
+    borderWidth: 1,
+  },
   //  ------------------------Modal ------------------------
   containerModal: {
     backgroundColor: 'rgba(0,0,0,0.3)',
@@ -361,6 +385,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#cbd5d6',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
+    paddingTop: 20,
   },
 });
 

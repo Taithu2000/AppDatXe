@@ -29,6 +29,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import dayjs from 'dayjs';
 import ItemRoute from '../../components/itemFlatList/itemRoute';
 import {customStyles} from '../../constants/customStyles';
+import SkeletonTicket from '../../components/skeleton/skeletonItemTicket';
+import NoDataComponent from '../../components/noDataComponent';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -42,9 +44,10 @@ const RouteList = ({navigation}) => {
     new Date(dayjs(new Date()).format('YYYY-MM-DD')),
   );
 
-  const {buses} = useSelector(state => state.bus);
   const {routes} = useSelector(state => state.route);
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [routerActives, setRouteActives] = useState([]);
   const [routerStopped, setRouteStopped] = useState([]);
@@ -62,8 +65,14 @@ const RouteList = ({navigation}) => {
   //---------------------------------------------gọi data--------------------------------------------
 
   const getData = async () => {
-    await dispatch(getAllrouteData());
-    await dispatch(getAllbusData());
+    setIsLoading(true);
+    try {
+      await dispatch(getAllrouteData());
+      await dispatch(getAllbusData());
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -127,7 +136,6 @@ const RouteList = ({navigation}) => {
     const {nativeEvent} = e;
 
     if (nativeEvent && nativeEvent.contentOffset) {
-
       const currentOffset = nativeEvent.contentOffset.x;
       if (currentOffset > 0) {
         setIndex(Math.floor((currentOffset + windowWidth / 2) / windowWidth));
@@ -220,12 +228,14 @@ const RouteList = ({navigation}) => {
           <ScrollView
             ref={stepCarousel}
             horizontal
+            scrollEventThrottle={16}
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             onScroll={handleScroll}>
             <View style={styles.containerScroll}>
               <View style={{width: windowWidth}}>
-                {routerActives.length > 0 && (
+                {isLoading && <SkeletonTicket />}
+                {!isLoading && (
                   <FlatList
                     data={routerActives}
                     renderItem={({item}) => (
@@ -242,18 +252,16 @@ const RouteList = ({navigation}) => {
                   />
                 )}
 
-                {routerActives.length == 0 && (
-                  <View style={styles.containerNodata}>
-                    <Image
-                      source={require('../../assets/images/train-journey.png')}
-                      style={styles.imageData}
-                    />
-                    <Text style={{fontSize: 18}}>Không có dữ liệu!</Text>
-                  </View>
+                {routerActives.length == 0 && !isLoading && (
+                  <NoDataComponent
+                    source={require('../../assets/images/train-journey.png')}
+                    content={'Không có dữ liệu về tuyến đường!'}
+                  />
                 )}
               </View>
               <View style={{width: windowWidth}}>
-                {routerStopped.length > 0 && (
+                {isLoading && <SkeletonTicket />}
+                {!isLoading && (
                   <FlatList
                     data={routerStopped}
                     renderItem={({item}) => (
@@ -270,14 +278,11 @@ const RouteList = ({navigation}) => {
                   />
                 )}
 
-                {routerStopped.length == 0 && (
-                  <View style={styles.containerNodata}>
-                    <Image
-                      source={require('../../assets/images/train-journey.png')}
-                      style={styles.imageData}
-                    />
-                    <Text style={{fontSize: 18}}>Không có dữ liệu!</Text>
-                  </View>
+                {routerStopped.length == 0 && !isLoading && (
+                  <NoDataComponent
+                    source={require('../../assets/images/train-journey.png')}
+                    content={'Không có dữ liệu về tuyến đường!'}
+                  />
                 )}
               </View>
             </View>
@@ -330,20 +335,5 @@ const styles = StyleSheet.create({
   containerScroll: {
     width: 2 * windowWidth,
     flexDirection: 'row',
-  },
-
-  containerNodata: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-
-  imageData: {
-    width: 100,
-    height: 100,
-    margin: 10,
-    marginTop: -50,
-    alignSelf: 'center',
-    tintColor: '#2fd6c3',
   },
 });

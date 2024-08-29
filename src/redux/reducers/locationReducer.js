@@ -8,8 +8,8 @@ import dayjs from 'dayjs';
 const initialState = {
   // startLocation: 'Đắk Lắk',
   // endLocation: 'Hồ Chí Minh',
-  startLocation: 'An Giang',
-  endLocation: 'Bình Phước',
+  startLocation: 'Đắk Lắk',
+  endLocation: 'Hồ Chí Minh',
   departure_date: dayjs(),
 };
 

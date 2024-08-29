@@ -192,7 +192,11 @@ const RouteUpdate = ({validModal, setValidModal}) => {
 
             {/*------------------------------------------- Cập nhật ngày kết thúc------------------------------------------ */}
 
-            <View style={styles.viewText}>
+            <TouchableOpacity
+              style={styles.viewText}
+              onPress={() => {
+                setIsModalend_date(true);
+              }}>
               <Text style={{fontSize: 16}}>Ngày kết thúc</Text>
 
               <View style={styles.viewInput}>
@@ -213,7 +217,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </TouchableOpacity>
 
             <MyCalendarFull
               visible={isModalend_date}
@@ -294,7 +298,9 @@ const RouteUpdate = ({validModal, setValidModal}) => {
             <View style={styles.viewText}>
               <Text style={{fontSize: 16}}> Giờ xuất phát </Text>
 
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => setIsDeparture_time(true)}>
                 <TextInput
                   placeholder="Giờ xuất phát"
                   style={styles.textInput}
@@ -309,7 +315,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
                     source={require('../../assets/images/time-quarter-to.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <DatePicker
@@ -332,7 +338,11 @@ const RouteUpdate = ({validModal, setValidModal}) => {
             <View style={styles.viewText}>
               <Text style={{fontSize: 16}}> Thời gian di chuyển </Text>
 
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => {
+                  setIsTotal_time(true);
+                }}>
                 <TextInput
                   editable={false}
                   placeholder="Thời gian di chuyển"
@@ -349,7 +359,7 @@ const RouteUpdate = ({validModal, setValidModal}) => {
                     source={require('../../assets/images/duration-alt.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <MyPickerHours

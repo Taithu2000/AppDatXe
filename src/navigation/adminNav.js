@@ -12,6 +12,7 @@ import RouteDetails from '../screen/adminScreen/routeDetails';
 import TripAdd from '../screen/adminScreen/tripAdd';
 import TripDetails from '../screen/adminScreen/tripDetails';
 import TicketDetails from '../screen/customerScreen/ticketDetails';
+import SettingScreen from '../screen/adminScreen/settingScreen';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
 
@@ -113,6 +114,29 @@ const AdminNav = () => {
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../assets/images/users-alt.png')}
+              style={[styles.iconTab, focused && styles.focusIcon]}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="SettingScreen"
+        component={SettingScreen}
+        options={{
+          tabBarLabel: ({focused}) => (
+            <Text
+              style={[
+                styles.tabBarLabel,
+                {color: focused ? myColor.buttonColor : 'black'},
+              ]}>
+             Cài đặt
+            </Text>
+          ),
+
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/admin-alt.png')}
               style={[styles.iconTab, focused && styles.focusIcon]}
             />
           ),

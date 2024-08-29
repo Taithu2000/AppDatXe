@@ -18,7 +18,11 @@ const MyCalendarFull = ({
 }) => {
   return (
     <Modal visible={visible} transparent={true}>
-      <View style={styles.modalCalendar}>
+      <TouchableOpacity
+      activeOpacity={1}
+      onPress={onPressbtnLater}
+      
+      style={styles.modalCalendar}>
         <View style={styles.viewCalendar}>
           <DateTimePicker
             mode="single"
@@ -63,7 +67,7 @@ const MyCalendarFull = ({
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 };

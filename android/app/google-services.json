@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "574110539910",
+    "firebase_url": "https://appdatxe-aa334-default-rtdb.firebaseio.com",
+    "project_id": "appdatxe-aa334",
+    "storage_bucket": "appdatxe-aa334.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574110539910:android:d34694a5c31408efb0b107",
+        "android_client_info": {
+          "package_name": "com.appdatxe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5IT0__zvnKMyBri65CzhzwpfTV1q4YoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

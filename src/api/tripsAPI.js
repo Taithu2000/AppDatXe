@@ -97,3 +97,16 @@ export const deleteManyTripByGroupId = async (groupId, date) => {
     throw new Error('Lỗi xóa dữ liệu: ', e);
   }
 };
+
+//xóa nhiều trip theo route_id
+
+export const deleteManyTripByRouteId = async (route_id, date) => {
+  try {
+    const response = await axios.delete(
+      `${IP}/trip/deleteByRoute/all/${route_id}/${date}`,
+    );
+    return true;
+  } catch (e) {
+    throw new Error('Lỗi xóa dữ liệu: ', e);
+  }
+};

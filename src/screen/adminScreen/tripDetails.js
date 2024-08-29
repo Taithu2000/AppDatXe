@@ -147,7 +147,6 @@ const TripDetails = ({navigation, route: myRoute}) => {
     }
   };
 
-
   //----------------------------------thêm giá trị vào pickerHours--------------------------------------------
 
   useEffect(() => {
@@ -443,7 +442,9 @@ const TripDetails = ({navigation, route: myRoute}) => {
 
             <View style={styles.viewText}>
               {renderLabeldpickupTime()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => setIsPickUpTime(true)}>
                 <TextInput
                   placeholder="Giờ đón"
                   style={styles.textInput}
@@ -458,7 +459,7 @@ const TripDetails = ({navigation, route: myRoute}) => {
                     source={require('../../assets/images/time-quarter-to.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>
@@ -486,7 +487,11 @@ const TripDetails = ({navigation, route: myRoute}) => {
 
             <View style={styles.viewText}>
               {renderLabeldTotal_tiem()}
-              <View style={styles.viewInput}>
+              <TouchableOpacity
+                style={styles.viewInput}
+                onPress={() => {
+                  setIsTotalTime(true);
+                }}>
                 <TextInput
                   placeholder="Thời gian di chuyển"
                   editable={false}
@@ -503,7 +508,7 @@ const TripDetails = ({navigation, route: myRoute}) => {
                     source={require('../../assets/images/duration-alt.png')}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{height: 20, width: '90%'}}>
               <Text style={{color: 'red'}}>

@@ -12,6 +12,7 @@ import AccountScreen from '../screen/customerScreen/accountScreen';
 import {customStyles} from '../constants/customStyles';
 import {myColor} from '../constants/myColor';
 import CustomerDetails from '../screen/adminScreen/customerDetails';
+import NewsScreen from '../screen/customerScreen/newsScreen';
 
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -133,6 +134,7 @@ export const HomeNav = () => {
       />
       <Stack.Screen name="OrderInformation" component={OrderInformation} />
       <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+      <Stack.Screen name="NewsScreen" component={NewsScreen} />
     </Stack.Navigator>
   );
 };

@@ -18,8 +18,7 @@ import {customStyles} from '../../constants/customStyles';
 import DialogNotifyOK_Cancel from '../../components/dialog/dialogNotifyOK_Cancel';
 import {logoutUser} from '../../redux/actions/userAction';
 
-const AccountScreen = ({navigation}) => {
-  const user = useSelector(state => state.user.user);
+const SettingScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
   const [visibleLogout, setVisibleLogout] = useState(false);
@@ -50,32 +49,13 @@ const AccountScreen = ({navigation}) => {
               fontSize: 25,
               fontWeight: 'bold',
             }}>
-            Tài khoản
+            Cài đặt
           </Text>
         </View>
 
         <View style={styles.containerBody}>
           {/* -------------------------tài khoản------------------------- */}
 
-          <TouchableOpacity
-            style={styles.accountView}
-            onPress={() => {
-              navigation.navigate('CustomerDetails');
-            }}>
-            <Image
-              style={styles.img}
-              source={require('../../assets/images/avatar-user.jpg')}
-            />
-
-            <View>
-              <Text style={styles.text}>{user.name}</Text>
-              <Text style={styles.text}>{user.phoneNumber}</Text>
-            </View>
-            <Image
-              style={styles.iconArrow}
-              source={require('../../assets/images/angle-small-right.png')}
-            />
-          </TouchableOpacity>
           {/* -------------------------đăng xuất------------------------- */}
           <TouchableOpacity
             style={styles.itemContainer}
@@ -173,4 +153,4 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
 });
-export default AccountScreen;
+export default SettingScreen;

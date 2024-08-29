@@ -11,7 +11,8 @@ import HeaderTripList from '../../components/header/headerTripList';
 import {useSelector, useDispatch} from 'react-redux';
 import {getAllTicketByRouteInDay} from '../../api/ticketApi';
 import {fetchUsersDataSSS} from '../../redux/actions/userAction';
-
+import SkeletonTicket from '../../components/skeleton/skeletonItemTicket';
+import NoDataComponent from '../../components/noDataComponent';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 dayjs.locale('vi');
@@ -24,6 +25,7 @@ const TicketList = ({navigation}) => {
 
   const [tickets, setTickets] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
   //sắp xếp
   const sortTicket = tickets => {
     return tickets.sort((t1, t2) => {
@@ -40,9 +42,14 @@ const TicketList = ({navigation}) => {
   };
   //-------------------gọi api lấy dữ liệu//-------------------
   const getDataTicket = async () => {
-    const data = await getAllTicketByRouteInDay(route._id, date);
-
-    setTickets(sortTicket(data));
+    setIsLoading(true);
+    try {
+      const data = await getAllTicketByRouteInDay(route._id, date);
+      setTickets(sortTicket(data));
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+    }
   };
 
   const getAllUser = async () => {
@@ -57,7 +64,7 @@ const TicketList = ({navigation}) => {
     getDataTicket();
   }, [date]);
 
-  const ItemTicket = ({item, onPress}) => {
+  const ItemTicket = ({item}) => {
     const user = users.find(user => user._id === item.user_id);
     return (
       <TouchableOpacity
@@ -104,27 +111,23 @@ const TicketList = ({navigation}) => {
     <View style={styles.tripContainer}>
       <HeaderTripList date={date} setDate={setDate} />
 
-      {tickets.length === 0 ? (
-        <View style={[styles.flatListContainer, {justifyContent: 'center'}]}>
-          <Image
-            source={require('../../assets/images/train-journey.png')}
-            style={styles.imageData}
-          />
-
-          <Text style={{fontSize: 16, alignSelf: 'center'}}>
-            Hôm nay không có lộ trình!
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.flatListContainer}>
+      <View style={styles.flatListContainer}>
+        {isLoading && <SkeletonTicket />}
+        {!isLoading && (
           <FlatList
             data={tickets}
             renderItem={({item}) => <ItemTicket item={item} />}
             keyExtractor={item => item._id}
             ListFooterComponent={<View style={{height: 40}} />}
           />
-        </View>
-      )}
+        )}
+        {!isLoading && tickets.length == 0 && (
+          <NoDataComponent
+            source={require('../../assets/images/bus-ticket.png')}
+            content={'Không có khách hàng đặt vé'}
+          />
+        )}
+      </View>
     </View>
   );
 };

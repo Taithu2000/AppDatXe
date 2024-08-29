@@ -22,6 +22,7 @@ import {addTicketApi} from '../../api/ticketApi';
 import {updateSeatNumbers} from '../../api/seat';
 import DialogNotify from '../../components/dialog/dialogNotify';
 import HeaderScreen from '../../components/header/headerScreen';
+import RotateLoading from '../../components/loading/rotateLoading';
 import dayjs from 'dayjs';
 
 // create a component
@@ -46,6 +47,7 @@ const PaymentScreen = ({navigation, route: myRoute}) => {
   const [accessToken, setAccessToken] = useState(null);
 
   const [visibleNotify, setVisibleNotify] = useState(false);
+  const [isLoadingWebView, setLoadingWebView] = useState(false);
 
   //   -------------------------------------------Tạo vé cho Paypal----------------------------------------------
 
@@ -142,6 +144,7 @@ const PaymentScreen = ({navigation, route: myRoute}) => {
       if (!!res?.links) {
         const findUrl = res.links.find(data => data?.rel == 'approve');
         setPaypalUrl(findUrl.href);
+        setLoadingWebView(!!findUrl.href);
       }
     } catch (error) {
       console.log('Lỗi:  ', error);
@@ -196,8 +199,11 @@ const PaymentScreen = ({navigation, route: myRoute}) => {
       />
       <HeaderScreen navigation={navigation} header={'Thanh toán'} />
 
-      <IconSteps iconLocation={true} iconUser={true} iconCard={true} />
       <View style={{flex: 1}}>
+        {isLoading && <RotateLoading />}
+
+        <IconSteps iconLocation={true} iconUser={true} iconCard={true} />
+
         <ScrollView>
           <View style={styles.viewInfo}>
             <Text style={styles.hederInfo}>Thông tin chuyến</Text>
@@ -283,21 +289,22 @@ const PaymentScreen = ({navigation, route: myRoute}) => {
           </View>
           <View style={{height: 80}}></View>
         </ScrollView>
-      </View>
 
-      <View
-        style={{
-          width: '90%',
-          alignSelf: 'center',
-          position: 'absolute',
-          bottom: 20,
-        }}>
-        <MyButton
-          onPress={() => {
-            onPressPaypal();
-          }}
-          nameBtn={'Thanh toán PayPal'}
-        />
+        <View
+          style={{
+            width: '90%',
+            alignSelf: 'center',
+            position: 'absolute',
+            bottom: 20,
+          }}>
+          <MyButton
+            onPress={() => {
+              onPressPaypal();
+            }}
+            nameBtn={'Thanh toán PayPal'}
+          />
+        </View>
+
         {/* --------------------------------Modal------------------------------- */}
         <Modal visible={!!paypalUrl}>
           <View style={styles.headerPayPal}>
@@ -318,9 +325,13 @@ const PaymentScreen = ({navigation, route: myRoute}) => {
             <Text style={styles.textHeader}>Thanh toán PayPal</Text>
           </View>
           <View style={{flex: 1}}>
+            {isLoadingWebView && <RotateLoading />}
             <WebView
               source={{uri: paypalUrl}}
               onNavigationStateChange={onUrlChange}
+              onLoad={() => {
+                setLoadingWebView(false);
+              }}
             />
           </View>
         </Modal>
